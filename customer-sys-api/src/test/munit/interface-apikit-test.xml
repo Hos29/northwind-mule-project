@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd http://www.mulesoft.org/schema/mule/munit-tools http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd ">
+    <munit:config name="northwind-customer-sys-api-apikit-test.xml" />
+    <http:request-config name="HTTP_Request_Configuration" basePath="/api">
+        <http:request-connection host="localhost" port="8082" />
+    </http:request-config>
+	<munit:test name="get:\customers:sys-api-flowTest" description="Verifying functionality of [get:\customers:northwind-customer-sys-api-config-200-application\json]">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="northwind-customer-sys-api-main" />
+            <munit:enable-flow-source value="get:\customers:northwind-customer-sys-api-config" />
+        </munit:enable-flow-sources>
+        <munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="73bb9ceb-7c67-42d1-8025-8e9e5307d945" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="457fc803-bf09-482c-8773-85b15cf618f3" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[output application/java &#10;---&#10;[{&#10;    CustomerID : "e512b",&#10;    CompanyName : "quae",&#10;    ContactName : "tempor",&#10;    ContactTitle : "magna",&#10;    Address : "Geary St 64",&#10;    City : "Madrid",&#10;    Region : "consectetur,",&#10;    PostalCode : "12345",&#10;    Country : "Austria",&#10;    Phone : "(361)-486-8791",&#10;    Fax : "(272)-316-1936",&#10;  },&#10;{&#10;    CustomerID : "98a5c",&#10;    CompanyName : "irure",&#10;    ContactName : "quae",&#10;    ContactTitle : "quaerat",&#10;    Address : "Loyd St 44",&#10;    City : "Paris",&#10;    Region : "Quis",&#10;    PostalCode : "85642",&#10;    Country : "Cameroon",&#10;    Phone : "(164)-285-2310",&#10;    Fax : "(337)-398-6077",&#10;  }]]' mediaType="application/java" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+            <http:request config-ref="HTTP_Request_Configuration" method="GET" path="/customers">
+                <http:headers>#[{"Accept":"application/json"}]</http:headers>
+            </http:request>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(200)]" message="The HTTP Status code is not correct!" doc:name="Assert That Status Code is 200" />
+			<munit-tools:assert doc:name="Assert expression" doc:id="3cef4417-3209-402b-b6f3-ce1465da758b" />
+        </munit:validation>
+    </munit:test>
+    <munit:test name="post:\customers:sys-api-flowTest" description="Verifying functionality of [post:\customers:application\json:northwind-customer-sys-api-config-201-application\json]">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="northwind-customer-sys-api-main" />
+            <munit:enable-flow-source value="post:\customers:application\json:northwind-customer-sys-api-config" />
+        </munit:enable-flow-sources>
+        <munit:behavior>
+            <set-payload value="#[MunitTools::getResourceAsString('scaffolder/request/post_customers_application_json.json')]" />
+			<munit-tools:mock-when doc:name="Mock when" doc:id="7cee5502-22d7-40d0-9607-6e75889319f3" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4267bc8b-118b-417a-a1e8-def671c37a76" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+        </munit:behavior>
+        <munit:execution>
+            <http:request config-ref="HTTP_Request_Configuration" method="POST" path="/customers">
+                <http:headers>#[{"Accept":"application/json","Content-Type":"application/json"}]</http:headers>
+            </http:request>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(201)]" message="The HTTP Status code is not correct!" doc:name="Assert That Status Code is 201" />
+            <munit-tools:assert-that expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::equalTo(MunitTools::getResourceAsString('scaffolder/response/post_201_customers_application_json.json'))]" message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" />
+        </munit:validation>
+    </munit:test>
+	<munit:test name="post:\customers:sys-api-flowTest-error-path" doc:id="b84d634e-e101-4e41-acc1-00354f1f07be" description="Verifying functionality of [post:\customers:application\json:northwind-customer-sys-api-config-201-application\json]" >
+		<munit:enable-flow-sources >
+			
+			<munit:enable-flow-source value="post:\customers:application\json:northwind-customer-sys-api-config" />
+			<munit:enable-flow-source value="northwind-customer-sys-api-main" />
+		</munit:enable-flow-sources>
+	</munit:test>
+</mule>
