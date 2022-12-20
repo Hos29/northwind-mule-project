@@ -304,6 +304,27 @@ type OrderPost = {|
 
 ]]></types:shape>
     </types:type>
+    <types:type name="Order" format="json">
+      <types:shape format="weave" example="examples/Order.json"><![CDATA[%dw 2.0
+
+type Order = {|
+  OrderID: Number {"typeId": "int"}, 
+  CustomerID: String, 
+  OrderDate: String, 
+  RequiredDate: String, 
+  ShippedDate: String, 
+  ShipVia: Number {"typeId": "int"}, 
+  Freight: Number {"typeId": "double"}, 
+  ShipName: String, 
+  ShipAddress: String, 
+  ShipCity: String, 
+  ShipRegion: String, 
+  ShipPostalCode: String, 
+  ShipCountry: String
+|} {"example": "{\\\"OrderID\\\":10249,\\\"CustomerID\\\":\\\"TOMSP\\\",\\\"OrderDate\\\":\\\"1996-07-05T00:00:00\\\",\\\"RequiredDate\\\":\\\"1996-08-16T00:00:00\\\",\\\"ShippedDate\\\":\\\"1996-07-10T00:00:00\\\",\\\"ShipVia\\\":1,\\\"Freight\\\":11.6100,\\\"ShipName\\\":\\\"Toms Spezialitten\\\",\\\"ShipAddress\\\":\\\"Luisenstr. 48\\\",\\\"ShipCity\\\":\\\"Mnster\\\",\\\"ShipRegion\\\":\\\"\\\",\\\"ShipPostalCode\\\":\\\"44087\\\",\\\"ShipCountry\\\":\\\"Germany\\\"}"}
+
+]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#6da68c99-2872-437c-a142-6e5c06f56689">
     <types:processor-declaration>
@@ -384,6 +405,15 @@ type OrderPost = {|
           <types:variable name="httpStatus" type="auto_a0e035eb-d019-4d67-927d-8089d31584be_Output-Variables-httpStatus"/>
         </types:variables>
       </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#da0cbc4c-eb2d-4990-9ce5-14d7f2bdf77c">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="Order"/>
+        </types:message>
+      </types:input-event>
     </types:processor-declaration>
   </types:enrichment>
 </types:mule>

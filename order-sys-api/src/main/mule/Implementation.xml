@@ -38,32 +38,17 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 	</flow>
 	<flow name="GetOneOrderFlow" doc:id="fe39f265-a3b5-4782-b315-27d8647b28cf" >
 		<logger level="INFO" doc:name="GetOrder" doc:id="e2a740fd-d8e7-4f06-80f5-b8d84e05a453" message="GetOrder"/>
-		<db:select doc:name="Select" doc:id="27cb67f7-9baa-4515-bb42-c00bc75f9a20" config-ref="Database_Config">
+		<db:select doc:name="Select" doc:id="da0cbc4c-eb2d-4990-9ce5-14d7f2bdf77c" config-ref="Database_Config" >
 			<db:sql ><![CDATA[Select * From orders 
-]]></db:sql>
+Where OrderID = :OrderID]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{'OrderID' : attributes.uriParams.OrderID}]]]></db:input-parameters>
 		</db:select>
-		<ee:transform doc:name="Transform Message" doc:id="7fe4a6cb-42c9-4fa9-86a2-cc1be0709ca8" >
+		<ee:transform doc:name="Transform Message" doc:id="c8a3f76c-0199-44b5-a4cd-d7a8026c495e" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-{
-	OrderID: payload.OrderID,
-	CustomerID: payload.CustomerID,
-	OrderDate: payload.OrderDate as String,
-	RequiredDate: payload.RequiredDate as String,
-	ShippedDate: payload.ShippedDate as String,
-	ShipVia: payload.ShipVia,
-	Freight: payload.Freight,
-	ShipName: payload.ShipName,
-	ShipAdress: payload.ShipAddress,
-	ShipCity: payload.ShipCity,
-	ShipRegion: payload.ShipRegion,
-	ShipPostalCode: payload.ShipPostalCode as Number,
-	ShipCountry: payload.ShipCountry,
-	Status: payload.Status
-}]]></ee:set-payload>
+payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="61d64887-2a92-4342-9b9f-2353b53cc1e1" message="#[payload]"/>
