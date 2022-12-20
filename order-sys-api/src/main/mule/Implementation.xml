@@ -78,7 +78,23 @@ output application/java
 VALUES (:OrderDate, :RequiredDate, :ShippedDate, :Freight, :ShipName, :ShipAddress, :ShipCity, :ShipRegion, :ShipPostalCode, :ShipCountry)]]></db:sql>
 			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
 		</db:insert>
-		<set-payload value="Order Placed" doc:name="Set Payload" doc:id="5e13df2b-e61e-4a4f-a572-5693aed757e5" />
-		<logger level="INFO" doc:name="Logger" doc:id="bb61403e-8b6b-4a81-b3da-f3947d46f0a3" />
+		<flow-ref doc:name="Flow Reference" doc:id="a163429b-f9d4-4799-9fb7-3de58d433fdc" name="ChildOrderIDFlow"/>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="eb171d8b-7595-4b04-8926-19033586e447" />
+		<logger level="INFO" doc:name="Logger" doc:id="bb61403e-8b6b-4a81-b3da-f3947d46f0a3" message='#[payload]'/>
+	</flow>
+	<flow name="ChildOrderIDFlow" doc:id="0189308b-c469-4a22-ae4c-77406afe22c5" >
+		<db:select doc:name="Select" doc:id="82ed3593-3af5-49be-8832-2fde625c97e8" config-ref="Database_Config">
+			<db:sql ><![CDATA[select OrderID as "Order Placed, Order ID: " from Orders ORDER BY OrderID DESC LIMIT 1;]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="1686d0ea-3f79-49b9-9335-189b9677d252" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="811b7a16-fb28-4483-8198-578d05064b84" />
 	</flow>
 </mule>
