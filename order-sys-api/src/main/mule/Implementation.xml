@@ -54,25 +54,6 @@ payload]]></ee:set-payload>
 		<logger level="INFO" doc:name="Logger" doc:id="61d64887-2a92-4342-9b9f-2353b53cc1e1" message="#[payload]"/>
 	</flow>
 	<flow name="PostFlow" doc:id="a0e035eb-d019-4d67-927d-8089d31584be" >
-		<ee:transform doc:name="Transform Message" doc:id="31f33846-d865-4aaf-bd9b-fc8511e009e0" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/java
----
-{
-	RequiredDate: payload.RequiredDate,
-	ShipName: payload.ShipName,
-	ShippedDate: payload.ShippedDate,
-	ShipCity: payload.ShipCity,
-	ShipAddress: payload.ShipAdress,
-	ShipPostalCode: payload.ShipPostalCode as String,
-	ShipCountry: payload.ShipCountry,
-	Freight: payload.Freight as String,
-	OrderDate: payload.OrderDate,
-	ShipRegion: payload.ShipRegion as String
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
 		<db:insert doc:name="Insert" doc:id="ae2badd6-ca01-4e98-b65e-43b0c45a5ba0" config-ref="Database_Config">
 			<db:sql ><![CDATA[INSERT INTO Orders (OrderDate, RequiredDate, ShippedDate, Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry)
 VALUES (:OrderDate, :RequiredDate, :ShippedDate, :Freight, :ShipName, :ShipAddress, :ShipCity, :ShipRegion, :ShipPostalCode, :ShipCountry)]]></db:sql>
