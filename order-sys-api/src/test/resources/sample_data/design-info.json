@@ -11,6 +11,9 @@
     },
     "1686d0ea-3f79-49b9-9335-189b9677d252": {
       "payload": "sample_data/json_1.json"
+    },
+    "c7cc2a6e-c3ec-4f37-8bd5-4d005d837b40": {
+      "payload": "sample_data/list_java_2.dwl"
     }
   }
 }

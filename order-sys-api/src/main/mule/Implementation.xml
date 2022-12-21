@@ -53,7 +53,7 @@ payload]]></ee:set-payload>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="61d64887-2a92-4342-9b9f-2353b53cc1e1" message="#[payload]"/>
 	</flow>
-	<flow name="PostFlow" doc:id="a0e035eb-d019-4d67-927d-8089d31584be" >
+	<flow name="PostOrderFlow" doc:id="a0e035eb-d019-4d67-927d-8089d31584be" >
 		<db:insert doc:name="Insert" doc:id="ae2badd6-ca01-4e98-b65e-43b0c45a5ba0" config-ref="Database_Config">
 			<db:sql ><![CDATA[INSERT INTO Orders (OrderDate, RequiredDate, ShippedDate, Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry)
 VALUES (:OrderDate, :RequiredDate, :ShippedDate, :Freight, :ShipName, :ShipAddress, :ShipCity, :ShipRegion, :ShipPostalCode, :ShipCountry)]]></db:sql>
@@ -78,6 +78,24 @@ payload]]></ee:set-payload>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="811b7a16-fb28-4483-8198-578d05064b84" />
 	</flow>
+	<flow name="GetOrderesEmployee" doc:id="5b64bd4a-5288-404f-b025-6d2edd21d119" >
+		<logger level="INFO" doc:name="Logger" doc:id="c8725f20-048c-46ad-a144-bf1c68852e3c" />
+		<db:select doc:name="Select" doc:id="ed0efbf8-d86b-4bc8-af14-71944002a55c" config-ref="Database_Config" >
+			<db:sql ><![CDATA[Select * From orders 
+Where EmployeeID = :EmployeeID]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'EmployeeID' : attributes.queryParams.EmployeeID}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="057865e3-1642-4eba-83b3-56f738396ded" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+
+payload ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger1" doc:id="7117929d-219f-472f-839f-f1bebd04d24e" message="#[payload]" />
+	</flow>
 	<flow name="GetProductAvailability" doc:id="8da5aa4d-e9f7-45c2-a8aa-df1cac04d5de" >
 		<logger level="INFO" doc:name="Logger" doc:id="b1a24ee5-b8e8-4896-aa66-bbad335a2fa5" />
 		<db:select doc:name="Select" doc:id="e9ac758f-9a66-4a09-bf52-5ca3bea5c192" config-ref="Database_Config">
@@ -92,7 +110,7 @@ Where ProductId = :ProductID]]></db:sql>
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-payload]]></ee:set-payload>
+payload ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="2bf8e2ff-5b1d-4321-9595-d7a71565d26a" />

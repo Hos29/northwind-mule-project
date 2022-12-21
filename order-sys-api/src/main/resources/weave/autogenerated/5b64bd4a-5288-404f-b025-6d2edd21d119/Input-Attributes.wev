@@ -1,6 +1,6 @@
 %dw 2.0
 
-type auto_fe39f265_a3b5_4782_b315_27d8647b28cf_Input_Attributes = {|
+type auto_5b64bd4a_5288_404f_b025_6d2edd21d119_Input_Attributes = {|
   clientCertificate?: {|
     publicKey?: {|  |}, 
     "type"?: String, 
@@ -9,14 +9,14 @@ type auto_fe39f265_a3b5_4782_b315_27d8647b28cf_Input_Attributes = {|
   headers: {|  |}, 
   listenerPath: String, 
   method: String, 
-  queryParams: {|  |}, 
+  queryParams: {| EmployeeID: String |}, 
   queryString: String, 
   relativePath: String, 
   remoteAddress: String, 
   requestPath: String, 
   requestUri: String, 
   scheme: String, 
-  uriParams: {| OrderID: String |}, 
+  uriParams: {|  |}, 
   version: String, 
   localAddress: String
 |}
