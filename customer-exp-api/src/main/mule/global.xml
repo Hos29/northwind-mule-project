@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="142f6d51-2216-4a0b-b117-25f900759f7a" file="config.yaml" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e388eb32-e9ac-4e9f-b1a3-5f659a4eb9f1" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="3e3e7901-edc0-455d-aa3c-4a6c7732372c" responseTimeout="100000">
+		<http:request-connection port="${request.port}" host="${request.host}" connectionIdleTimeout="300000"/>
+	</http:request-config>
+	<configuration doc:name="Configuration" doc:id="b10e734d-7ede-4232-8489-fd5db3d3accf" defaultErrorHandler-ref="globalError_Handler" />
+	<error-handler name="globalError_Handler" doc:id="f9083fc1-be2a-4072-8003-04215bafad81" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c93c4ee6-cda3-4a8e-a97f-8100cf87d1fe" type="HTTP:CONNECTIVITY">
+			<ee:transform doc:name="Transform Message" doc:id="74d9c9c5-1f83-4364-ae4b-ef8bb3c2e39a" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml		
+---
+{
+	message: "Service unavailable"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="4014653c-c835-4db2-8f84-0617e1f3fe24" type="HTTP:BAD_REQUEST">
+			<ee:transform doc:name="Transform Message" doc:id="23bbb3e2-2c38-47c1-a481-0c1d20cd3ef1" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+{
+	message: "Duplicated entry to database"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="400" doc:name="Set Variable" doc:id="bb622c0f-677b-4f14-a8c2-1fbbba9db1c3" variableName="httpStatus"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="baa2172b-d5fd-42ed-abc2-f8ce5422c39c" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="e003178c-ab94-4db4-a1de-f0ab62725c65" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+ {
+ 	message: error.description
+ }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+</mule>

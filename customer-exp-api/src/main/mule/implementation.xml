@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="getCustomersFlow" doc:id="a7856407-7b5b-4825-be5b-a20d6c69c152" >
+		<logger level="INFO" doc:name="startGetCustomerFlow" doc:id="7d6fdece-cbaa-4307-9020-4fba8b65ebce" />
+		<http:request method="GET" doc:name="Request" doc:id="baa1cc98-018a-43e6-800c-7c041641b862" config-ref="HTTP_Request_configuration" path="/api/customers"/>
+		<ee:transform doc:name="Transform Message" doc:id="631103e2-c828-4fdd-aed8-fc50e10b263c" >
+			<ee:message >
+				<ee:set-payload resource="GetCustomersFlow.dwl" />
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="endGetCustomerFlow" doc:id="7b1ba026-2bfb-441f-843d-6adbe0df5266" />
+	</flow>
+	<flow name="postCustomerFlow" doc:id="7b2ee7eb-9720-4490-8590-adfbc6e23569" >
+		<logger level="INFO" doc:name="startPostCustomerFlow" doc:id="dea01201-2581-4fb6-854e-49d48af3f9f9" />
+		<ee:transform doc:name="Transform Message" doc:id="d448e838-0ea6-404f-be5a-50e7d57c6bd4">
+			<ee:message>
+				<ee:set-payload resource="PostCustomerFlow.dwl" />
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="Request" doc:id="71c88a2f-b4d8-41eb-b421-e64be222a814" config-ref="HTTP_Request_configuration" path="/api/customers">
+			<http:body ><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	CustomerID: payload.CustomerID,
+	CompanyName: payload.CompanyName,
+	ContactName: payload.ContactName,
+	ContactTitle: payload.ContactTitle,
+	Address: payload.Address,
+	City: payload.City,
+	PostalCode: payload.PostalCode,
+	Country: payload.Country,
+	Region: payload.Region,
+	Phone: payload.Phone,
+	Fax: payload.Fax
+}]]]></http:body>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="f76add61-c4d6-4a09-872a-dc27505abe44" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+"Message": "Customer added successfully"]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="endpostCustomerFlow" doc:id="e5809168-ac22-4895-9d9f-4e9acf051455" />
+	</flow>
+</mule>

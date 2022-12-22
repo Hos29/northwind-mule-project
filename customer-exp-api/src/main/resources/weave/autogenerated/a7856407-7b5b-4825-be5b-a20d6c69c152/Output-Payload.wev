@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_a7856407_7b5b_4825_be5b_a20d6c69c152_Output_Payload = Array<{  contactInfo?: {    country: String,     contactTitle: String,     address: String,     phone: String,     postalCode: Number,     _?: Any  },   contactName: String,   companyName: String,   customerID: String,   _?: Any}>
+
