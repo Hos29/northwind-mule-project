@@ -5,6 +5,6 @@ db:
   host: "localhost"
   port: "3306"
   user: "root"
-  password: "AWhansve3032"
+  password: "Hossam29"
   database: "northwind"
   
