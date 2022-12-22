@@ -44,14 +44,14 @@ payload]]></ee:set-payload>
 		<logger level="INFO" doc:name="Logger" doc:id="91abc6ac-26e9-4246-9b19-2a202a6c67a4" message="#[payload]"/>
 		<choice doc:name="StatusChoice" doc:id="9b327576-1521-4c47-9898-fad2a687953c" >
 			<when expression="#[payload.TotalPrice != null]">
-				<flow-ref doc:name="Flow Reference" doc:id="765b8315-1044-4283-8616-d8c3cb2bdb8b" name="offerProposalRouteOne"/>
+				<flow-ref doc:name="offerProposed" doc:id="765b8315-1044-4283-8616-d8c3cb2bdb8b" name="offerProposed"/>
 			</when>
 			<otherwise >
-				<flow-ref doc:name="Flow Reference" doc:id="7da9015c-1685-4f34-9496-53bc6c1e0025" name="offerProposalRouteTwo"/>
+				<flow-ref doc:name="offerOutOfStock" doc:id="7da9015c-1685-4f34-9496-53bc6c1e0025" name="offerOutOfStock"/>
 			</otherwise>
 		</choice>
 	</flow>
-	<flow name="offerProposalRouteOne" doc:id="285ededa-b961-48f3-9a0e-3ed0711c752d" >
+	<flow name="offerProposed" doc:id="285ededa-b961-48f3-9a0e-3ed0711c752d" >
 
 		<set-variable value="Proposed" doc:name="Proposed" doc:id="c4306a8c-7a19-4b52-bb16-f94d5d836b8f" variableName="Proposed"/>
 		<ee:transform doc:name="Transform Message" doc:id="0100ae15-5d90-4872-b026-8230ca459e70" >
@@ -76,7 +76,7 @@ WHERE OfferID = :OfferID]]></db:sql>
 		</db:update>
 	
 </flow>
-	<flow name="offerProposalRouteTwo" doc:id="bd7623a0-480b-4d58-b1b0-b5f57b09414b" >
+	<flow name="offerOutOfStock" doc:id="bd7623a0-480b-4d58-b1b0-b5f57b09414b" >
 		<set-variable value="Out-Of-Stock" doc:name="OutOfStock" doc:id="13e14cf9-1160-4f6b-875f-8ed99d0a0480" variableName="OutOfStock"/>
 		<ee:transform doc:name="Transform Message" doc:id="611997cc-3605-4d37-bb20-611589fe33c7" >
 			<ee:message >
@@ -94,6 +94,27 @@ output application/java
 SET EmployeeID = :EmployeeID, Status = :Status
 WHERE OfferID = :OfferID]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{'OfferID': payload.OfferID , 'EmployeeID': payload.EmployeeID, 'Status': vars.OutOfStock}]]]></db:input-parameters>
+		</db:update>
+	</flow>
+	<flow name="offerAcceptFlow" doc:id="3639c3a5-001b-4edc-8007-e04f682afd98" >
+		<set-variable value="Accepted" doc:name="Accept" doc:id="2fd2a3e9-d981-4fb5-a508-41caf411de0d" variableName="Accept"/>
+		<ee:transform doc:name="Transform Message" doc:id="fb05d355-e78f-4561-9f94-b13167a60184" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	OfferID: payload.OfferID,
+	PaymentTransactionID: payload.PaymentTransactionID,
+	DateApproved: payload.DateApproved
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<db:update doc:name="Update" doc:id="be234928-c1ff-4f95-9c1c-1314bb7d4f64" config-ref="Database_Config">
+			<db:sql ><![CDATA[UPDATE offers
+SET PaymentTransactionID = :PaymentTransactionID, DateApproved = :DateApproved, Status = :Status
+WHERE OfferID = :OfferID]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'OfferID': payload.OfferID , 'PaymentTransactionID': payload.PaymentTransactionID, 'DateApproved': payload.DateApproved, 'Status': vars.Accept}]]]></db:input-parameters>
 		</db:update>
 	</flow>
 </mule>

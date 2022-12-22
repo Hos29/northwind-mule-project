@@ -3,7 +3,7 @@
     <http:listener-config name="northwind-offer-sys-api-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
-    <apikit:config name="northwind-offer-sys-api-config" api="resource::4b44ec2d-930a-412e-9413-9e3f70bd73e8:northwind-offer-sys-api:1.0.4:raml:zip:northwind-offer-sys-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="northwind-offer-sys-api-config" api="resource::4b44ec2d-930a-412e-9413-9e3f70bd73e8:northwind-offer-sys-api:1.0.5:raml:zip:northwind-offer-sys-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="northwind-offer-sys-api-main">
         <http:listener config-ref="northwind-offer-sys-api-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -127,6 +127,9 @@ output application/json
         <flow-ref doc:name="Flow Reference" doc:id="d0ef2104-08af-44f7-9157-3016227b87f9" name="postOfferRequestFlow" />
     </flow>
     <flow name="put:\offer\proposal:application\json:northwind-offer-sys-api-config">
-		<flow-ref doc:name="Flow Reference" doc:id="674f1e9c-0b53-45af-8809-7196e5fba0c6" name="postOfferProposalFlow" />
+        <flow-ref doc:name="Flow Reference" doc:id="674f1e9c-0b53-45af-8809-7196e5fba0c6" name="postOfferProposalFlow" />
+    </flow>
+    <flow name="put:\offer\accept:application\json:northwind-offer-sys-api-config">
+		<flow-ref doc:name="Flow Reference" doc:id="2ae192fb-f29b-4c8c-8e00-67cfe0849848" name="offerAcceptFlow"/>
     </flow>
 </mule>
