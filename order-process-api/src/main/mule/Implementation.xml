@@ -1,5 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></mule>
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="CheckProductAvailability" doc:id="585d7caa-d61e-4d54-85e3-3f7943df467d" >
+		<logger level="INFO" doc:name="GetProductsStock" doc:id="a639c589-a71e-4925-a531-03cb6ab0ccc2" />
+		<http:request method="GET" doc:name="Request" doc:id="008fc34e-1523-46e6-a812-125513261ca0" path="/api/products" config-ref="HTTP_Request_configuration">
+			<http:query-params ><![CDATA[#[output application/json
+---
+{
+	"ProductID" : attributes.queryParams.ProductID
+}]]]></http:query-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="57676dc3-121a-4b4c-a8c6-eab777a91ae7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="cb2907e2-80c2-4bf3-a335-8bacadfac15f" >
+			<when expression="#[payload.ProductID != null]">
+				<choice doc:name="Choice" doc:id="29d04cb7-4033-48e0-8c62-44193829f528" >
+					<when expression="#[payload.UnitsInStock != [0]]">
+						<set-payload doc:name="Set Payload" doc:id="038760bd-376b-4459-9d49-f01c29cce68e" value='#[payload.UnitsInStock]'/>
+					</when>
+					<otherwise >
+						<set-payload value="Order is out of stock" doc:name="Set Payload" doc:id="4b6db9d1-d1aa-47e5-8398-8880968f53f7" />
+					</otherwise>
+				</choice>
+			</when>
+			<otherwise>
+				<set-payload value="Product is not available." doc:name="Set Payload" doc:id="6faf0f19-790c-4d8d-a4ce-0f2e9f8b5545" />
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="682419b0-1a7f-4fe5-aa81-6245d0008e21" />
+	</flow>
+</mule>

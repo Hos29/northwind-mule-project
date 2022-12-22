@@ -96,21 +96,33 @@ payload ]]></ee:set-payload>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger1" doc:id="7117929d-219f-472f-839f-f1bebd04d24e" message="#[payload]" />
 	</flow>
-	<flow name="GetProductAvailability" doc:id="8da5aa4d-e9f7-45c2-a8aa-df1cac04d5de" >
-		<logger level="INFO" doc:name="Logger" doc:id="b1a24ee5-b8e8-4896-aa66-bbad335a2fa5" />
+	<flow name="GetProductAvailability" doc:id="678fb341-0ae4-49ae-9334-1fd9ad9a6c33" >
+		<logger level="INFO" doc:name="Logger" doc:id="df944e7c-28b3-45f2-8425-1b7395d14c65" />
 		<db:select doc:name="Select" doc:id="e9ac758f-9a66-4a09-bf52-5ca3bea5c192" config-ref="Database_Config">
-			<db:sql ><![CDATA[Select * from products 
+			<db:sql><![CDATA[Select * from products 
 Where ProductId = :ProductID]]></db:sql>
-			<db:input-parameters ><![CDATA[#[{
+			<db:input-parameters><![CDATA[#[{
 	'ProductID' : attributes.queryParams.ProductID 
 }]]]></db:input-parameters>
 		</db:select>
-		<ee:transform doc:name="Transform Message" doc:id="c7cc2a6e-c3ec-4f37-8bd5-4d005d837b40" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
+		<ee:transform doc:name="Transform Message" doc:id="c7cc2a6e-c3ec-4f37-8bd5-4d005d837b40">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-payload ]]></ee:set-payload>
+{
+	ProductID: payload.ProductID,
+	ProductName: payload.ProductName,
+	SupplierID: payload.SupplierID,
+	CategoryID: payload.CategoryID,
+	QuantituPerUnit: payload.QuantituPerUnit,
+	UnitPrice: payload.UnitPrice,
+	UnitsInStock: payload.UnitsInStock,
+	UnitsOnOrder: payload.UnitsOnOrder,
+	ReorderLevel: payload.ReorderLevel,
+	Discontinued: payload.Discontinued
+}
+]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="2bf8e2ff-5b1d-4321-9595-d7a71565d26a" />
