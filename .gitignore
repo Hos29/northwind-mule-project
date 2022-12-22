@@ -1,3 +1,5 @@
-/.metadata/
+/.tooling-apps-cache/
+/.tooling/
 /.mule/
-/.gitignore/
+/.metadata/
+
