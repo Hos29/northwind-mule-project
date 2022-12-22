@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="getCustomersFlow" doc:id="f1711593-5c8f-403b-8f80-1eecdafa658f" >
+		<logger level="INFO" doc:name="startGetFlow" doc:id="8f2da5f0-b2a5-4b45-a470-07fed03c9600" message="StartingGetCustomerFlow"/>
+		<db:select doc:name="Select" doc:id="457fc803-bf09-482c-8773-85b15cf618f3" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT *
+FROM Customers]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="07b5c9e2-20bb-4de7-9950-03ff7566c1c0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	CustomerID: payload01.CustomerID,
+	CompanyName: payload01.CompanyName,
+	ContactName: payload01.ContactName default "",
+	ContactTitle: payload01.ContactTitle default "",
+	Address: payload01.Address default "",
+	City: payload01.City default "",
+	PostalCode: payload01.PostalCode as Number default 0,
+	Region: payload01.Region,
+	Country: payload01.Country default "",
+	Phone: payload01.Phone default "",
+	Fax: payload01.Fax,
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="endGetFlow" doc:id="838c5e17-1686-4bc6-8da9-7767ec959793" message="EndningGetCustomerFlow"/>
+	</flow>
+	<flow name="postCustomerFlow" doc:id="16272340-2b77-4ef8-a44e-d6c8e9d12513" >
+		<logger level="INFO" doc:name="startPostFlow" doc:id="c6689c43-a976-4960-af75-da06765f4b42" />
+		<db:insert doc:name="Insert" doc:id="4267bc8b-118b-417a-a1e8-def671c37a76" config-ref="Database_Config">
+			<db:sql ><![CDATA[INSERT INTO customers 
+VALUES ( :CustomerID, :CompanyName, :ContactName, :ContactTitle, :Address, :City, :PostalCode, :Country, :Region, :Phone, :Fax)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+		</db:insert>
+		<set-payload value='Customer added successfully' doc:name="Set Payload" doc:id="a8b5953b-7cb2-4aab-bd8a-a73b71baec5b" />
+		<logger level="INFO" doc:name="endPostFlow" doc:id="01e6e166-dcbd-4828-9b32-3374c11791c4" />
+	</flow>
+</mule>

@@ -1,0 +1,19 @@
+%dw 2.0
+
+type auto_fe39f265_a3b5_4782_b315_27d8647b28cf_Input_Payload = {|
+  OrderID: Number, 
+  CustomerID: String, 
+  EmployeeID: Number, 
+  OrderDate: String, 
+  RequiredDate: String, 
+  ShippedDate: String, 
+  ShipVia: Number, 
+  Freight: Number, 
+  ShipName: String, 
+  ShipAddress: String, 
+  ShipCity: String, 
+  ShipRegion: Null, 
+  ShipPostalCode: Number, 
+  ShipCountry: String
+|}
+
