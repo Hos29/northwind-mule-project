@@ -8,7 +8,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	<flow name="GetAllOrdersFlow" doc:id="427dd55e-59e1-4ef5-9b8f-4fa1ecc3ee54" >
 		<logger level="INFO" doc:name="GetOrdersFlow" doc:id="4e130993-1c38-4cf8-af88-43ebe480877b" message="GetOrdersFlow" />
 		<db:select doc:name="Select" doc:id="ece60571-5afe-476f-8f2d-09eb812265a6" config-ref="Database_Config">
-			<db:sql ><![CDATA[Select * From orders 
+			<db:sql ><![CDATA[Select * From Orders 
 Where CustomerID = :CustomerID]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{'CustomerID' : attributes.queryParams.CustomerID}]]]></db:input-parameters>
 		</db:select>
@@ -39,7 +39,7 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 	<flow name="GetOneOrderFlow" doc:id="fe39f265-a3b5-4782-b315-27d8647b28cf" >
 		<logger level="INFO" doc:name="GetOrder" doc:id="e2a740fd-d8e7-4f06-80f5-b8d84e05a453" message="GetOrder"/>
 		<db:select doc:name="Select" doc:id="da0cbc4c-eb2d-4990-9ce5-14d7f2bdf77c" config-ref="Database_Config" >
-			<db:sql ><![CDATA[Select * From orders 
+			<db:sql ><![CDATA[Select * From Orders 
 Where OrderID = :OrderID]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{'OrderID' : attributes.uriParams.OrderID}]]]></db:input-parameters>
 		</db:select>
@@ -81,7 +81,7 @@ payload]]></ee:set-payload>
 	<flow name="GetOrderesEmployee" doc:id="5b64bd4a-5288-404f-b025-6d2edd21d119" >
 		<logger level="INFO" doc:name="Logger" doc:id="c8725f20-048c-46ad-a144-bf1c68852e3c" />
 		<db:select doc:name="Select" doc:id="ed0efbf8-d86b-4bc8-af14-71944002a55c" config-ref="Database_Config" >
-			<db:sql ><![CDATA[Select * From orders 
+			<db:sql ><![CDATA[Select * From Orders 
 Where EmployeeID = :EmployeeID]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{'EmployeeID' : attributes.queryParams.EmployeeID}]]]></db:input-parameters>
 		</db:select>
@@ -90,7 +90,6 @@ Where EmployeeID = :EmployeeID]]></db:sql>
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-
 payload ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
@@ -99,7 +98,7 @@ payload ]]></ee:set-payload>
 	<flow name="GetProductAvailability" doc:id="678fb341-0ae4-49ae-9334-1fd9ad9a6c33" >
 		<logger level="INFO" doc:name="Logger" doc:id="df944e7c-28b3-45f2-8425-1b7395d14c65" />
 		<db:select doc:name="Select" doc:id="e9ac758f-9a66-4a09-bf52-5ca3bea5c192" config-ref="Database_Config">
-			<db:sql><![CDATA[Select * from products 
+			<db:sql><![CDATA[Select * from Products 
 Where ProductId = :ProductID]]></db:sql>
 			<db:input-parameters><![CDATA[#[{
 	'ProductID' : attributes.queryParams.ProductID 
@@ -110,19 +109,8 @@ Where ProductId = :ProductID]]></db:sql>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{
-	ProductID: payload.ProductID,
-	ProductName: payload.ProductName,
-	SupplierID: payload.SupplierID,
-	CategoryID: payload.CategoryID,
-	QuantituPerUnit: payload.QuantituPerUnit,
-	UnitPrice: payload.UnitPrice,
-	UnitsInStock: payload.UnitsInStock,
-	UnitsOnOrder: payload.UnitsOnOrder,
-	ReorderLevel: payload.ReorderLevel,
-	Discontinued: payload.Discontinued
-}
-]]></ee:set-payload>
+
+flatten(payload)]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="2bf8e2ff-5b1d-4321-9595-d7a71565d26a" />

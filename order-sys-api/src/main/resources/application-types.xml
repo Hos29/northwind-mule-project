@@ -449,9 +449,14 @@ type: string]]></types:shape>
   </types:enrichment>
   <types:enrichment select="#c7cc2a6e-c3ec-4f37-8bd5-4d005d837b40">
     <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="Product[]"/>
+        </types:message>
+      </types:input-event>
       <types:output-event>
         <types:message>
-          <types:payload type="Product"/>
+          <types:payload type="Product[]"/>
         </types:message>
       </types:output-event>
     </types:processor-declaration>
@@ -534,7 +539,7 @@ type: string]]></types:shape>
     <types:processor-declaration>
       <types:output-event>
         <types:message>
-          <types:payload type="Product"/>
+          <types:payload type="Product[]"/>
         </types:message>
       </types:output-event>
     </types:processor-declaration>

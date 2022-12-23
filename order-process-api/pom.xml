@@ -61,7 +61,7 @@
 		<dependency>
 			<groupId>4b44ec2d-930a-412e-9413-9e3f70bd73e8</groupId>
 			<artifactId>northwind-order-process-api</artifactId>
-			<version>1.0.1</version>
+			<version>1.0.5</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>

@@ -1,0 +1,10 @@
+http:
+  port: "8081"
+  
+orderrequest: 
+  host: "localhost"
+  port: "8080"
+
+offerrequest:
+  host: "localhost"
+  port: "8083"
