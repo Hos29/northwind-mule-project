@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>4b44ec2d-930a-412e-9413-9e3f70bd73e8</groupId>
 			<artifactId>northwind-offer-sys-api</artifactId>
-			<version>1.0.7</version>
+			<version>1.0.15</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>

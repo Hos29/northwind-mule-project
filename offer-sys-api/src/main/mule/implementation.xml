@@ -204,4 +204,32 @@ output application/json
 			</ee:message>
 		</ee:transform>
 	</flow>
+	<flow name="acceptedOffersByCustomerIDFlow" doc:id="31220f18-d53a-4fc5-b762-ae9506cede58" >
+		<set-variable value="Accepted" doc:name="Accepted" doc:id="0d8851c7-f904-47ca-8aae-89cd1b23bd1d" variableName="Accepted"/>
+		<db:select doc:name="Select" doc:id="197494c8-f313-450d-a7c5-088189ee4ee4" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM offers WHERE CustomerID = :CustomerID AND Status = :Status]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'CustomerID': attributes.queryParams.CustomerID, 'Status': vars.Accepted}]]]></db:input-parameters>
+		</db:select>
+		<logger level="INFO" doc:name="Logger" doc:id="81d566af-a9d9-4468-a6a9-dade0b655568" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="fdb6675d-1e16-4fa8-b3fa-d19f636edbb8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	OfferID: payload01.OfferID,
+	Status: payload01.Status,
+	DateCreated: payload01.DateCreated as Date,
+	DateApproved: payload01.DateApproved as Date,
+	EmployeeID: payload01.EmployeeID,
+	CustomerID: payload01.CustomerID,
+	ProductID: payload01.ProductID,
+	TotalPrice: payload01.TotalPrice,
+	PriceDiscount: payload01.PriceDiscount,
+	PaymentTransactionID: payload01.PaymentTransactionID,
+	Quantity: payload01.Quantity
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
 </mule>
