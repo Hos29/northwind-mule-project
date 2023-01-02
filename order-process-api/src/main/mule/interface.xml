@@ -94,15 +94,6 @@ output application/json
         </error-handler>
     </flow>
     <flow name="northwind-order-process-api-console">
-<<<<<<< HEAD
-        <http:listener config-ref="HTTP_Listener_config" path="/console/*">
-            <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
-            </http:response>
-            <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body>#[payload]</http:body>
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
-=======
         <http:listener path="/console/*" config-ref="HTTP_Listener_config">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
@@ -110,7 +101,6 @@ output application/json
             <http:error-response statusCode="#[vars.httpStatus default 500]">
                 <http:body><![CDATA[#[payload]]]></http:body>
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
->>>>>>> 6915763296ae26c8ed4ace3bcbe17a9430496b3f
             </http:error-response>
         </http:listener>
         <apikit:console config-ref="northwind-order-process-api-config" />
@@ -131,11 +121,7 @@ output application/json
         </error-handler>
     </flow>
     <flow name="put:\offers:application\json:northwind-order-process-api-config">
-<<<<<<< HEAD
-		<flow-ref doc:name="Flow Reference" doc:id="b9fd1707-2303-4fb7-ac07-80f95a062313" name="OfferProposal"/>
-    </flow>
-    <flow name="post:\offers:application\json:northwind-order-process-api-config">
-=======
+
         <ee:transform>
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
@@ -148,7 +134,6 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="post:\offers:application\json:northwind-order-process-api-config" doc:id="02a3e29a-281f-4650-b551-d509481de41d">
->>>>>>> 6915763296ae26c8ed4ace3bcbe17a9430496b3f
         <ee:transform>
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
@@ -172,12 +157,6 @@ output application/json
             </ee:message>
         </ee:transform>
     </flow>
-<<<<<<< HEAD
-    <flow name="post:\products:application\json:northwind-order-process-api-config">
-        <flow-ref doc:name="Flow Reference" doc:id="400f010c-d360-474e-878b-136486a631fd" name="CheckProductAvailability" />
-    </flow>
-=======
->>>>>>> 6915763296ae26c8ed4ace3bcbe17a9430496b3f
     <flow name="post:\shipping:application\json:northwind-order-process-api-config">
         <ee:transform>
             <ee:message>
@@ -193,10 +172,4 @@ output application/json
             </ee:message>
         </ee:transform>
     </flow>
-<<<<<<< HEAD
-=======
-    <flow name="get:\products:northwind-order-process-api-config">
-        <flow-ref doc:name="Flow Reference" doc:id="3a581ea4-bbcf-40f1-9161-13d6beb1da73" name="CheckProductAvailability" />
-    </flow>
->>>>>>> 6915763296ae26c8ed4ace3bcbe17a9430496b3f
 </mule>
