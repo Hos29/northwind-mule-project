@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="CheckProductAvailability" doc:id="585d7caa-d61e-4d54-85e3-3f7943df467d" >
+		<logger level="INFO" doc:name="GetProductsStock" doc:id="a639c589-a71e-4925-a531-03cb6ab0ccc2" />
+		<set-variable value="#[payload]" doc:name="requestBody" doc:id="8c8df05e-2de9-41ca-86df-e72839938878" variableName="requestBody"/>
+		<http:request method="GET" doc:name="Request" doc:id="008fc34e-1523-46e6-a812-125513261ca0" path="/api/products" config-ref="HTTP_OrderRequest_configuration">
+			<http:query-params ><![CDATA[#[output application/json
+---
+{
+	"ProductID" : attributes.queryParams.ProductID
+}]]]></http:query-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="57676dc3-121a-4b4c-a8c6-eab777a91ae7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ProductID: payload01.ProductID,
+	ProductName: payload01.ProductName,
+	SupplierID: payload01.SupplierID,
+	CategoryID: payload01.CategoryID,
+	QuantityPerUnit: payload01.QuantityPerUnit,
+	UnitPrice: payload01.UnitPrice,
+	UnitsInStock: payload01.UnitsInStock,
+	UnitsOnOrder: payload01.UnitsOnOrder,
+	ReorderLevel: payload01.ReorderLevel,
+	Discontinued: payload01.Discontinued
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="cb2907e2-80c2-4bf3-a335-8bacadfac15f" >
+			<when expression="#[payload.ProductID != null]">
+				<validation:is-not-null doc:name="Is not null" doc:id="1e43cebd-6f33-4252-ae36-67d00c725b8d" config-ref="Validation_Config" value="#[payload]"/>
+<!-- [STUDIO:"Choice"]				<choice doc:name="Choice" doc:id="29d04cb7-4033-48e0-8c62-44193829f528" >
+					<when expression="#[payload.UnitsInStock != [0]]">
+						<set-payload doc:name="Set Payload" doc:id="038760bd-376b-4459-9d49-f01c29cce68e" value='#[payload.ProductID + payload.UnitsInStock]'/>
+						<http:request method="POST" doc:name="Request" doc:id="8fb41879-1930-43ee-a48b-938929c49bfb" config-ref="HTTP_OfferRequest_configuration" path="/offer/request"/>
+					</when>
+					<otherwise >
+						<set-payload value="Order is out of stock" doc:name="Set Payload" doc:id="4b6db9d1-d1aa-47e5-8398-8880968f53f7" />
+						<http:request method="POST" doc:name="Request" doc:id="c62f06be-0609-405a-bccb-aab845ab6704" config-ref="HTTP_OfferRequest_configuration" path="/offer/request"/>
+					</otherwise>
+				</choice> [STUDIO] -->
+			</when>
+			<otherwise>
+				<set-payload value="Product is not available." doc:name="Set Payload" doc:id="6faf0f19-790c-4d8d-a4ce-0f2e9f8b5545" />
+			</otherwise>
+		</choice>
+		<http:request method="POST" doc:name="Request" doc:id="f9fee101-feca-4f72-9fe0-0565ef57156a" config-ref="HTTP_OfferRequest_configuration" url="http://localhost:8083/api/offer/request" >
+			<http:body ><![CDATA[#[vars.requestBody]]]></http:body>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="682419b0-1a7f-4fe5-aa81-6245d0008e21" message="#[payload]"/>
+	</flow>
+	<flow name="OfferProposal" doc:id="2388dda8-0fd0-43be-81fb-9da2dd0f5c26" >
+		<logger level="INFO" doc:name="Logger" doc:id="d46a8b36-f776-4720-aa4f-71166eac1793" />
+		<ee:transform doc:name="Transform Message" doc:id="023a7d1a-56f5-4a0e-8c06-782facb5afc7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="PUT" doc:name="Request" doc:id="1f56a4aa-809c-4bf9-bace-9713ef7eb77b" config-ref="HTTP_OfferRequest_configuration" url="http://localhost:8083/api/offer/proposal"/>
+		<logger level="INFO" doc:name="Logger" doc:id="74e5c91a-5c5b-4b61-a628-2019c8e2a35b" />
+	</flow>
+</mule>

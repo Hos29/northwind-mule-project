@@ -1,0 +1,16 @@
+{
+    "OrderID": 94,
+    "CustomerID": "dfghh",
+    "OrderDate": "2008-07-05",
+    "RequiredDate": "2002-05-06",
+    "ShippedDate": "2007-05-16",
+    "ShipVia": 38,
+    "Freight": 50,
+    "ShipName": "Alane",
+    "ShipAddress": "Second Ave 65",
+    "ShipCity": "Paris",
+    "ShipRegion": "eum",
+    "ShipPostalCode": "aliquip",
+    "ShipCountry": "Denmark",
+    "Status": "autem"
+  }

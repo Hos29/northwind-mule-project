@@ -1,0 +1,17 @@
+{
+  "sampleData": {
+    "6da68c99-2872-437c-a142-6e5c06f56689": {
+      "payload": "sample_data/list_java.dwl"
+    },
+    "7fe4a6cb-42c9-4fa9-86a2-cc1be0709ca8": {
+      "payload": "sample_data/list_java_1.dwl"
+    },
+    "31f33846-d865-4aaf-bd9b-fc8511e009e0": {
+      "payload": "sample_data/json_2.json"
+    },
+    "1686d0ea-3f79-49b9-9335-189b9677d252": {
+      "payload": "sample_data/json_1.json"
+    },
+    "c7cc2a6e-c3ec-4f37-8bd5-4d005d837b40": {}
+  }
+}

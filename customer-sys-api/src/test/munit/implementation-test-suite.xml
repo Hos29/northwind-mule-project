@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="implementation-test-suite.xml" />
+	<munit:test name="get-customers-happy-path" doc:id="6ca5ad0c-b0ce-45c4-9a73-26160f28b013" description="Test">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="54a571ad-03e8-48ea-8824-64443d8adf4c" />
+			<munit-tools:mock-when doc:name="Mock when" doc:id="25af9c4e-edc3-4307-9c24-272c4d2db8af" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="457fc803-bf09-482c-8773-85b15cf618f3" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[output application/json&#10;---&#10;[&#10;  {&#10;    "CustomerID": "ALFKI",&#10;    "CompanyName": "Alfreds Futterkiste",&#10;    "ContactName": "Maria Anders",&#10;    "ContactTitle": "Sales rep",&#10;    "Address": "Obere Str 57",&#10;    "City": "Berlin",&#10;    "Region": "BA",&#10;    "PostalCode": 11889,&#10;    "Country": "Germany",&#10;    "Phone": "192-2844123",&#10;    "Fax": "222.222.222"&#10;  },&#10;  {&#10;    "CustomerID": "ANATR",&#10;    "CompanyName": "Ana Trujillo Emparedados y helados",&#10;    "ContactName": "Ana Trujillo",&#10;    "ContactTitle": "Manager",&#10;    "Address": "Avida Constantin",&#10;    "City": "Mexico city",&#10;    "Region": "MA",&#10;    "PostalCode": 23384,&#10;    "Country": "Mexico",&#10;    "Phone": "294-1139401",&#10;    "Fax": "333.333.333"&#10;  }&#10;]]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getCustomersFlow" doc:id="9fd53d46-3332-4a13-9057-aac8293db4cf" name="getCustomersFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert expression" doc:id="ffa82def-ce7b-4508-88ca-a1b58e75d3a8" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post-customer-happy-path" doc:id="57a54454-1b48-495a-bca1-6398f2a4aed4" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="f5cec851-7593-4313-a73f-a6fa2f803fba" >
+				<munit:payload value='#[output application/json&#10;---&#10;{&#10;  "CustomerID": "ANTON",&#10;  "CompanyName": "Antonio Moreno Taquera",&#10;  "ContactName": "Antonio Moreno",&#10;  "ContactTitle": "Owner",&#10;  "Address": "Mataderos 2312",&#10;  "City": "Mexico City",&#10;  "PostalCode": 5023,&#10;  "Country": "Mexico",&#10;  "Region": "MA",&#10;  "Phone": "(5) 555-3932",&#10;  "Fax": "222.222.222"&#10;}]' />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="c121bfc2-a5ff-4477-9437-209b0c0c809e" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4267bc8b-118b-417a-a1e8-def671c37a76" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[payload]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to postCustomersFlow" doc:id="0a9b683b-d089-4c0c-aff7-25ef1367a3d3" name="postCustomerFlow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert expression" doc:id="d21347f3-781c-4756-b442-da444f7f57dc" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post-flow-query-execution-error-path" doc:id="7387559c-e952-4d41-bc69-ad6f14ba6491" description="Test" expectedErrorType="DB:QUERY_EXECUTION">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="5413fa7a-a84d-4256-b5e2-bf3f33febff8">
+				<munit:payload value='#[output application/json&#10;---&#10;{&#10;  "CustomerID": "ANTON",&#10;  "CompanyName": "Antonio Moreno Taquera",&#10;  "ContactName": "Antonio Moreno",&#10;  "ContactTitle": "Owner",&#10;  "Address": "Mataderos 2312",&#10;  "City": "Mexico City",&#10;  "PostalCode": 5023,&#10;  "Country": "Mexico",&#10;  "Region": "MA",&#10;  "Phone": "(5) 555-3932",&#10;  "Fax": "222.222.222"&#10;}]' />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a9d62034-fa68-45b6-b79e-5410abf930b1" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4267bc8b-118b-417a-a1e8-def671c37a76" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:QUERY_EXECUTION" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to postCustomerFlow" doc:id="4d5de157-4e49-4aab-9d41-a8f057fc14d3" name="postCustomerFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="b1248558-b17d-47e4-bb5d-3da4a0d27628" actual="#[payload.message]" expected="Customer already exists in database" message="Error message not working"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post-flow-connectivity-error-path" doc:id="ce8d01af-b563-478a-ac7d-221fa41f9a7c" description="Test" expectedErrorType="DB:CONNECTIVITY" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="5ef21af2-97ce-417a-a8d1-94b9166bd476">
+				<munit:payload value='#[output application/json&#10;---&#10;{&#10;  "CustomerID": "ANTON",&#10;  "CompanyName": "Antonio Moreno Taquera",&#10;  "ContactName": "Antonio Moreno",&#10;  "ContactTitle": "Owner",&#10;  "Address": "Mataderos 2312",&#10;  "City": "Mexico City",&#10;  "PostalCode": 5023,&#10;  "Country": "Mexico",&#10;  "Region": "MA",&#10;  "Phone": "(5) 555-3932",&#10;  "Fax": "222.222.222"&#10;}]' />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="e7cbc698-10e6-4a15-9bea-12daf0399732" processor="db:insert" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4267bc8b-118b-417a-a1e8-def671c37a76" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to postCustomerFlow" doc:id="fad17709-c07c-47c3-af3e-80ddc1549b0d" name="postCustomerFlow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="b357ff81-bd87-4e3b-9fdc-6e642243a806" actual="#[payload.message]" expected="Database unavailable" message="Error message not working" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get-flow-connectivity-error-path" doc:id="0ff7df44-1223-48a3-bde8-a15e38d44020" description="Test" expectedErrorType="DB:CONNECTIVITY" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="fd00053e-a7f2-4366-90b0-88da3e533701" processor="db:select" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="457fc803-bf09-482c-8773-85b15cf618f3" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getCustomerFlow" doc:id="0c49c626-e002-4610-b652-b260425d3fe2" name="getCustomersFlow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="24920d98-69b4-4d35-a289-832d15d79442" actual="#[payload.message]" expected="Database unavailable" message="Error message not working" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get-flow-any-error-path" doc:id="6a2e4bed-c4d4-4e74-bf95-890f0920aaaf" description="Test" expectedErrorType="ANY" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="6f798a08-936f-41fb-929a-ed21f13ed3f0" processor="db:select" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="457fc803-bf09-482c-8773-85b15cf618f3" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="ANY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getCustomerFlow" doc:id="7a09799d-9bd6-417c-aa4f-73fa5e38943c" name="getCustomersFlow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="4c732b60-5e64-455b-95bd-a6bf1f55b132" actual="#[payload.message]" expected="#[error.description]" message="Error message not working" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post-flow-any-error-path" doc:id="ae82b82f-b557-43d8-85e4-c6dfaa1d07a8" description="Test" expectedErrorType="ANY" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="eb274d24-5fd2-4af5-83b0-12a406aacd98">
+				<munit:payload value='#[output application/json&#10;---&#10;{&#10;  "CustomerID": "ANTON",&#10;  "CompanyName": "Antonio Moreno Taquera",&#10;  "ContactName": "Antonio Moreno",&#10;  "ContactTitle": "Owner",&#10;  "Address": "Mataderos 2312",&#10;  "City": "Mexico City",&#10;  "PostalCode": 5023,&#10;  "Country": "Mexico",&#10;  "Region": "MA",&#10;  "Phone": "(5) 555-3932",&#10;  "Fax": "222.222.222"&#10;}]' />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="8c5b5852-b790-42b9-8a3d-2b87d6379e94" processor="db:insert" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4267bc8b-118b-417a-a1e8-def671c37a76" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="ANY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to postCustomerFlow" doc:id="fe3f28b3-2718-4af0-b116-8959e3c68d01" name="postCustomerFlow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="eab81e80-d541-4df4-89b9-c30569159c3d" actual="#[payload.message]" expected="#[error.description]" message="Error message not working" />
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

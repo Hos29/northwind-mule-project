@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_585d7caa_d61e_4d54_85e3_3f7943df467d_Output_Variables_ProductStock = Array<Number {"typeId": "int"}>
+

@@ -1,0 +1,10 @@
+{
+  "CustomerID": "abc",
+  "CompanyName": "Lazy K Kountry Store",
+  "ContactName": "Annette Roulet",
+  "ContactTitle": "Sales Manager",
+  "Address": "12 Orchestra Terrace",
+  "PostalCode": 21345,
+  "Country": "Canada",
+  "Phone": "555.555.5555"
+}

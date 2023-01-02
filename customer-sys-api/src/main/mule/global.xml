@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c878e207-1b39-4920-8cd7-f0f8344e450a" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" readTimeout="300000"/>
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="24434bba-0c0f-441a-b641-206f47cc3d19" file="config.yaml" />
+	<configuration doc:name="Configuration" doc:id="3ae6667c-fc4a-4c4b-822f-f9387eef1a97" defaultErrorHandler-ref="globalError_Handler" />
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="533e4c3d-b9ea-4fea-b103-afdff28b1bd1" >
+		<db:my-sql-connection host="${db.host}" port="${db.port}" password="${db.password}" database="${db.database}" user="${db.user}"/>
+	</db:config>
+	<error-handler name="globalError_Handler" doc:id="fa4065a9-078e-497d-82e5-93aefbf37a7f" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="359f9ca1-c3b6-44dd-97ba-084cc3ebd0a0" type="DB:CONNECTIVITY">
+			<ee:transform doc:name="Transform Message" doc:id="0c48c249-eb57-4a75-a836-760caef642f0" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "Database unavailable"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="5a5693ea-b762-497a-a794-347d0332ca01" type="DB:QUERY_EXECUTION">
+			<ee:transform doc:name="Transform Message" doc:id="16c0a5ea-7c9e-451a-a4aa-6c45901ad3df" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Customer already exists in database" 
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<set-variable value="400" doc:name="Set Variable" doc:id="90906368-306a-4786-9cbb-88272fc08145" variableName="httpStatus"/>
+		</on-error-propagate>
+		
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3338c827-67cf-47e1-ada4-54b6abd2fb18" type="ANY">
+			<ee:transform doc:name="error.description" doc:id="1ece29c2-0357-4dc2-b4c8-f9be30629781" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			</on-error-propagate>
+		
+	
+</error-handler>
+	
+</mule>
