@@ -11,8 +11,8 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 	</http:listener-config>
 	<configuration-properties doc:name="Configuration properties" doc:id="24434bba-0c0f-441a-b641-206f47cc3d19" file="config.yaml" />
 	<configuration doc:name="Configuration" doc:id="3ae6667c-fc4a-4c4b-822f-f9387eef1a97" defaultErrorHandler-ref="globalError_Handler" />
-	<db:config name="Database_Config" doc:name="Database Config" doc:id="533e4c3d-b9ea-4fea-b103-afdff28b1bd1" >
-		<db:my-sql-connection host="${db.host}" port="${db.port}" password="${db.password}" database="${db.database}" user="${db.user}"/>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="533e4c3d-b9ea-4fea-b103-afdff28b1bd1">
+		<db:my-sql-connection host="${db.host}" port="${db.port}" password="${db.password}" database="${db.database}" user="${db.user}" />
 	</db:config>
 	<error-handler name="globalError_Handler" doc:id="fa4065a9-078e-497d-82e5-93aefbf37a7f" >
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="359f9ca1-c3b6-44dd-97ba-084cc3ebd0a0" type="DB:CONNECTIVITY">

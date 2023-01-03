@@ -1,0 +1,36 @@
+#%RAML 1.0 DataType
+
+type: object
+properties:
+      CustomerID: 
+        type: string
+        maxLength: 5
+      CompanyName: 
+        type: string
+        maxLength: 40
+      ContactName: 
+        type: string
+        maxLength: 30
+      ContactTitle: 
+        type: string
+        maxLength: 30
+      Address: 
+        type: string
+        maxLength: 60
+      City?: 
+        type: string
+        maxLength: 15
+      Region?: 
+        type: string
+        maxLength: 15
+      PostalCode: 
+        type: integer 
+      Country: 
+        type: string
+        maxLength: 15
+      Phone: 
+        type: string
+        maxLength: 24
+      Fax?: 
+        type: string
+        maxLength: 24

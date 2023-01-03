@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="shipping-sys-api-post" doc:id="124bd474-45e3-4ff6-9e63-afdac17b3035" >
+		<logger level="INFO" doc:name="post-shipping-request" doc:id="935d8a04-38a5-4819-b9a5-7ae3d093132e" />
+		<http:request method="POST" doc:name="Request" doc:id="bf1aefa4-a6da-48d6-8ce9-8a2c6f7a79c5" path="/api/shipping" config-ref="HTTP_Request_configuration"/>
+		<logger level="INFO" doc:name="Logger" doc:id="606374ae-b9c8-41a7-9c87-17d00d58ee3d" />
+	</flow>
+</mule>
