@@ -232,4 +232,25 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 			</ee:message>
 		</ee:transform>
 	</flow>
+	<flow name="pendingOffersFlow" doc:id="15cb8122-eef7-4619-a183-6d650d05f6ad" >
+		<set-variable value="Pending" doc:name="Pending" doc:id="720e9ab6-3854-4164-a15b-01f35e0da326" variableName="Pending"/>
+		<db:select doc:name="Select" doc:id="00cfa1dc-d738-4ca8-8ea6-f7fdced68ddb" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM offers WHERE Status = :Status]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'Status': vars.Pending}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="00693cd1-1ce3-471f-a5ef-7fde2f5f42aa" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	OfferID: payload01.OfferID,
+	Status: payload01.Status,
+	CustomerID: payload01.CustomerID,
+	ProductID: payload01.ProductID,
+	Quantity: payload01.Quantity
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
 </mule>

@@ -4,8 +4,10 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
-	<configuration-properties doc:name="Configuration properties" doc:id="b5a45ed6-7e19-4a15-a1e2-a087c08e38ad" file="config.yaml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="b5a45ed6-7e19-4a15-a1e2-a087c08e38ad" file="config-${dev}.yaml" />
 	<db:config name="Database_Config" doc:name="Database Config" doc:id="6595db1c-4203-41e6-9dfd-dd916a043c81" >
-		<db:my-sql-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" database="northwind"/>
+		<db:my-sql-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" database="${db.database}"/>
 	</db:config>
+	<global-property doc:name="Global Property" doc:id="b6be0897-c965-401c-b6a2-1659d8b9bbe9" name="env" value="prod" />
+	<global-property doc:name="Global Property" doc:id="0a66fb51-3999-4572-bc43-bc4c8a74f31d" name="dev" value="dev" />
 </mule>
