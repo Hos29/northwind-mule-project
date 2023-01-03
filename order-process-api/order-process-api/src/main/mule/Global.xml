@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="a2f4d64e-8a78-4c96-a5fc-555fb9262eb0" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" readTimeout="300000"/>
+	</http:listener-config>
+	<http:request-config name="HTTP_OrderRequest_configuration" doc:name="HTTP Request configuration" doc:id="42c4a5ad-81ac-4515-91e0-95d23c0ccb44" >
+		<http:request-connection host="${orderrequest.host}" port="${orderrequest.port}" connectionIdleTimeout="300000"/>
+	</http:request-config>
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="5642dd61-fec4-4208-adac-3b8eeda188f7" />
+	<configuration-properties doc:name="Configuration properties" doc:id="ae957adc-add6-4d75-92a6-0d927638791c" file="config-${env}.yaml" />
+	<http:request-config name="HTTP_OfferRequest_configuration" doc:name="HTTP Request configuration" doc:id="c524ac34-42a5-4831-9bd5-27e83cceb669" >
+		<http:request-connection host="${offerrequest.host}" port="${orderrequest.port}" connectionIdleTimeout="300000"/>
+	</http:request-config>
+	<global-property doc:name="Global Property" doc:id="cac040d0-52ac-4e6f-9af3-fe85eebe5266" name="env" value="prod" />
+</mule>

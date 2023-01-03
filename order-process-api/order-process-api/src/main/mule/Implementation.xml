@@ -51,7 +51,7 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 	</flow>
 	<flow name="OfferProposal" doc:id="2388dda8-0fd0-43be-81fb-9da2dd0f5c26" >
 		<logger level="INFO" doc:name="Logger" doc:id="d46a8b36-f776-4720-aa4f-71166eac1793" />
-		<set-variable doc:name="OfferBody" doc:id="c7844fe3-4906-477b-b38b-858e032f9167" variableName="OfferBody" value="#[payload]"/>
+		<set-variable value="#[payload]" doc:name="OfferBody" doc:id="c7844fe3-4906-477b-b38b-858e032f9167" variableName="OfferBody"/>
 		<http:request method="POST" doc:name="Request" doc:id="861f56d2-4db0-437d-98d5-7713a6ceff1a" config-ref="HTTP_OfferRequest_configuration" url="http://localhost:8080/api/unitinstock">
 			<http:body ><![CDATA[#[vars.OfferBody]]]></http:body>
 		</http:request>
@@ -60,6 +60,7 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
+
 flatten(payload)]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>

@@ -115,4 +115,33 @@ flatten(payload)]]></ee:set-payload>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="2bf8e2ff-5b1d-4321-9595-d7a71565d26a" />
 	</flow>
+	<flow name="UnitsInStockFlow" doc:id="98055726-e1fc-42dd-8ce5-eadda4f7c697" >
+		<logger level="INFO" doc:name="Logger" doc:id="5bfbb9ed-55fd-4bc6-b314-d8d96aa3e1c0" />
+		<ee:transform doc:name="Transform Message" doc:id="71932dfc-661b-4748-ac01-ba06ad9cbcc5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	OfferID: payload.OfferID as Number default 0
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<db:select doc:name="Select" doc:id="974382b1-7bbc-40e9-87d2-4e080fd2c057" config-ref="Database_Config" >
+			<db:sql ><![CDATA[SELECT UnitsInStock
+FROM products
+WHERE ProductID IN (SELECT ProductID FROM offers WHERE OfferID = :OfferID)
+]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{ 'OfferID' : payload.OfferID }]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="36c37c1f-5f43-4785-9f25-5f85fa34dd0f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload.UnitsInStock]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="15559534-9015-4361-b3d2-4be3a45a46be" />
+	</flow>
 </mule>
