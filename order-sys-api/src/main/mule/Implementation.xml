@@ -122,6 +122,7 @@ flatten(payload)]]></ee:set-payload>
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
+
 {
 	OfferID: payload.OfferID as Number default 0
 }]]></ee:set-payload>
