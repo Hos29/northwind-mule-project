@@ -271,5 +271,6 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="0401964e-1dac-4d20-b46f-fddfd7493e69" />
 	</flow>
 </mule>

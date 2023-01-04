@@ -35,6 +35,7 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="1aebfbba-d5a7-41d8-8031-3a0b7cd36c63" message="#[payload]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="03720b4d-24eb-494c-b339-dcd551ceee4f" />
 	</flow>
 	<flow name="GetOneOrderFlow" doc:id="fe39f265-a3b5-4782-b315-27d8647b28cf" >
 		<logger level="INFO" doc:name="GetOrder" doc:id="e2a740fd-d8e7-4f06-80f5-b8d84e05a453" message="GetOrder"/>

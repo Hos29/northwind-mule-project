@@ -109,5 +109,6 @@ output application/java
 			<http:body><![CDATA[#[vars.ShippingRequest]]]></http:body>
 		</http:request>
 		<logger level="INFO" doc:name="Logger" doc:id="d4aa2874-7512-4b3a-b631-a4953e4796aa" />
+		<logger level="INFO" doc:name="Logger" doc:id="ba7176ce-c73a-4e3e-9c7b-46a6acda8bae" />
 	</flow>
 </mule>
