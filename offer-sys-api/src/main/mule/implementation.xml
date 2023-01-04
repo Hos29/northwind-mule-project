@@ -253,4 +253,23 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 			</ee:message>
 		</ee:transform>
 	</flow>
+	<flow name="OfferIDvsCustomerID" doc:id="e8e5b630-c6ea-41b3-84f6-7be12f7a33a8" >
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="c9f4c574-e60e-40e5-b62f-b9a8a4893b29" />
+		<db:select doc:name="Select" doc:id="f417fa70-1e40-4007-b608-14614ef8eedb" config-ref="Database_Config">
+			<db:sql ><![CDATA[Select * from offers 
+where OfferID = :OfferID and CustomerID = :CustomerID]]></db:sql>
+			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="121cbc9a-7afc-4b33-8ca0-1eab6d8e33d9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	OfferID: payload01.OfferID,
+	CustomerID: payload01.CustomerID
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
 </mule>

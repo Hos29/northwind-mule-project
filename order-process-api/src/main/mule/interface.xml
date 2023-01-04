@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
-    <apikit:config name="northwind-order-process-api-config" api="resource::4b44ec2d-930a-412e-9413-9e3f70bd73e8:northwind-order-process-api:1.0.5:raml:zip:northwind-order-process-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="northwind-order-process-api-config" api="resource::4b44ec2d-930a-412e-9413-9e3f70bd73e8:northwind-order-process-api:1.0.7:raml:zip:northwind-order-process-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="northwind-order-process-api-main">
         <http:listener config-ref="HTTP_Listener_config" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -121,7 +121,7 @@ output application/json
         </error-handler>
     </flow>
     <flow name="put:\offers:application\json:northwind-order-process-api-config">
-		<flow-ref doc:name="Flow Reference" doc:id="54cfbb21-6b00-49e3-8be1-c33c80a60c27" name="OfferProposal"/>
+        <flow-ref doc:name="Flow Reference" doc:id="54cfbb21-6b00-49e3-8be1-c33c80a60c27" name="OfferProposal" />
     </flow>
     <flow name="post:\offers:application\json:northwind-order-process-api-config" doc:id="02a3e29a-281f-4650-b551-d509481de41d">
         <ee:transform>
@@ -148,21 +148,12 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="post:\shipping:application\json:northwind-order-process-api-config">
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  shipperID: 1,
-  categoryName: "FOOD",
-  postalCode: "20063",
-  shippingDate: "string"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="Flow Reference" doc:id="5518c482-f6fc-48e2-99df-a6daf2deadfb" name="ShippingFlow" />
     </flow>
     <flow name="post:\products:application\json:northwind-order-process-api-config">
-        <flow-ref doc:name="Flow Reference" doc:id="b0716582-60c7-4837-9e1f-f8cc7feb97d6" name="CheckProductAvailability"/>
+        <flow-ref doc:name="Flow Reference" doc:id="b0716582-60c7-4837-9e1f-f8cc7feb97d6" name="CheckProductAvailability" />
+    </flow>
+    <flow name="put:\offers\accept:application\json:northwind-order-process-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="705c667e-a95b-4323-af13-ffc9c706a98d" name="OfferAcceptFlow"/>
     </flow>
 </mule>

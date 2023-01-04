@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 	<flow name="CheckProductAvailability" doc:id="585d7caa-d61e-4d54-85e3-3f7943df467d" >
 		<logger level="INFO" doc:name="GetProductsStock" doc:id="a639c589-a71e-4925-a531-03cb6ab0ccc2" />
 		<set-variable value="#[payload]" doc:name="requestBody" doc:id="8c8df05e-2de9-41ca-86df-e72839938878" variableName="requestBody"/>
-		<http:request method="GET" doc:name="Request" doc:id="008fc34e-1523-46e6-a812-125513261ca0" path="/api/products" config-ref="HTTP_OrderRequest_configuration">
+		<http:request method="GET" doc:name="Request" doc:id="008fc34e-1523-46e6-a812-125513261ca0" path="/api/products" config-ref="Order_HTTP_Request_configuration">
 			<http:query-params ><![CDATA[#[output application/json
 ---
 {
@@ -38,21 +38,20 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 		<set-variable value="#[payload.ProductID]" doc:name="ProductIDVar" doc:id="75eac07d-ab49-4f0c-a95d-fc1871862198" variableName="ProductIDVar" />
 		<choice doc:name="Choice" doc:id="cb2907e2-80c2-4bf3-a335-8bacadfac15f" >
 			<when expression="#[payload.ProductID != null]">
-<!-- [STUDIO:"Is not null"]				<validation:is-not-null doc:name="Is not null" doc:id="1e43cebd-6f33-4252-ae36-67d00c725b8d" config-ref="Validation_Config" value="#[payload]"/> [STUDIO] -->
 				<set-payload value="#[vars.requestBody]" doc:name="Set Payload" doc:id="0b235f3e-32bd-4c50-b310-6f1b803c6279" />
 			</when>
 			<otherwise>
 				<set-payload value="Product is not available." doc:name="Set Payload" doc:id="6faf0f19-790c-4d8d-a4ce-0f2e9f8b5545" />
 			</otherwise>
 		</choice>
-		<http:request method="POST" doc:name="Request" doc:id="f9fee101-feca-4f72-9fe0-0565ef57156a" config-ref="HTTP_OfferRequest_configuration" url="http://localhost:8083/api/offer/request" >
+		<http:request method="POST" doc:name="Request" doc:id="f9fee101-feca-4f72-9fe0-0565ef57156a" config-ref="Offer_HTTP_Request_configuration" url="http://localhost:8083/api/offer/request" >
 		</http:request>
 		<logger level="INFO" doc:name="Logger" doc:id="682419b0-1a7f-4fe5-aa81-6245d0008e21" message="#[payload]"/>
 	</flow>
 	<flow name="OfferProposal" doc:id="2388dda8-0fd0-43be-81fb-9da2dd0f5c26" >
 		<logger level="INFO" doc:name="Logger" doc:id="d46a8b36-f776-4720-aa4f-71166eac1793" />
 		<set-variable doc:name="OfferBody" doc:id="c7844fe3-4906-477b-b38b-858e032f9167" variableName="OfferBody" value="#[payload]"/>
-		<http:request method="POST" doc:name="Request" doc:id="861f56d2-4db0-437d-98d5-7713a6ceff1a" config-ref="HTTP_OfferRequest_configuration" url="http://localhost:8080/api/unitinstock">
+		<http:request method="POST" doc:name="Request" doc:id="861f56d2-4db0-437d-98d5-7713a6ceff1a" config-ref="Offer_HTTP_Request_configuration" url="http://localhost:8080/api/unitinstock">
 			<http:body ><![CDATA[#[vars.OfferBody]]]></http:body>
 		</http:request>
 		<ee:transform doc:name="Transform Message" doc:id="023a7d1a-56f5-4a0e-8c06-782facb5afc7" >
@@ -71,13 +70,33 @@ flatten(payload)]]></ee:set-payload>
 				<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	OfferID: vars.OfferBody.OfferID,&#10;	EmployeeID: vars.OfferBody.EmployeeID&#10;}]" doc:name="Set Payload" doc:id="aee25c3b-fab3-4ea1-92e1-a86c7269c70e" />
 			</otherwise>
 		</choice>
-		<http:request method="PUT" doc:name="Request" doc:id="1f56a4aa-809c-4bf9-bace-9713ef7eb77b" config-ref="HTTP_OfferRequest_configuration" url="http://localhost:8083/api/offer/proposal">
+		<http:request method="PUT" doc:name="Request" doc:id="1f56a4aa-809c-4bf9-bace-9713ef7eb77b" config-ref="Offer_HTTP_Request_configuration" url="http://localhost:8083/api/offer/proposal">
 		</http:request>
 		<logger level="INFO" doc:name="Logger" doc:id="74e5c91a-5c5b-4b61-a628-2019c8e2a35b" />
 	</flow>
-	<flow name="ImplementationFlow" doc:id="d1cd8b04-adb4-4175-9d9a-ffc69638feee" >
+	<flow name="OfferAcceptFlow" doc:id="f7bf0c01-622e-4055-a507-4f800b6b7a99" initialState="started">
+		<set-variable value="#[payload]" doc:name="AcceptOfferBody" doc:id="92b793f4-ab5b-4e93-98b2-8aee45d1c546" variableName="AcceptOfferBody"/>
+		<http:request method="POST" doc:name="Request" doc:id="209f29b4-6649-4e45-8bc1-636a03cd76c0" config-ref="Offer_HTTP_Request_configuration" url="http://localhost:8083/api/offer/matching"/>
+		<choice doc:name="Choice" doc:id="360a71b6-3fe7-4ddf-94c6-235950b4af89" >
+			<when expression="#[payload != []]">
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	OfferID: vars.AcceptOfferBody.OfferID,&#10;	PaymentTransactionID: vars.AcceptOfferBody.PaymentTransactionID,&#10;	DateApproved: now() as String {format: "yyyy-MM-dd"},&#10;}]' doc:name="Set Payload" doc:id="e52fc0ed-f0a9-4ca2-a622-90c27637bf00" />
+				<flow-ref doc:name="Flow Reference" doc:id="8ec708f6-4d01-46c2-b5ee-63e850929634" name="ChildFlowAcceptOffer" targetValue="#[vars.IDReply]"/>
+			</when>
+			<otherwise >
+				<set-payload value="OfferID and CustomerID do not match " doc:name="Set Payload" doc:id="efc66193-b7a7-4208-a592-89148156e91e" />
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="983c4d9a-fe2c-49e5-b2df-0b422209407e" message="#[payload]"/>
+	</flow>
+	<flow name="ChildFlowAcceptOffer" doc:id="3a077cf4-d510-4de4-ad75-abe10c982130" >
+		<http:request method="PUT" doc:name="Request" doc:id="b07ca3f5-2949-4b53-a0f7-495867aed45c" config-ref="Offer_HTTP_Request_configuration" url="http://localhost:8083/api/offer/accept">
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="23f73c1c-ed89-46d3-8cc2-cd335a8f4c27" />
+	</flow>
+	<flow name="ShippingFlow" doc:id="d1cd8b04-adb4-4175-9d9a-ffc69638feee" initialState="stopped">
 		<logger level="INFO" doc:name="Logger" doc:id="5b0e64f0-67c5-4056-93b2-c4ef5112f370" />
-		<ee:transform doc:name="Transform Message" doc:id="c75993f7-0989-46ea-bbca-c5b513389cb5" >
+		<set-variable value="#[payload]" doc:name="ShippingRequest" doc:id="ea8c92ce-320a-42a5-807a-bc817cbbcfab" variableName="ShippingRequest"/>
+		<ee:transform doc:name="Transform Message" doc:id="c6921094-705b-4227-ae04-002f70d18416" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/java
@@ -86,5 +105,9 @@ output application/java
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<http:request method="POST" doc:name="Request" doc:id="1168d37f-b911-4a3d-a5aa-db17c19ce91e" config-ref="Shipping_HTTP_Request_configuration" url="http://localhost:8084/api/ship">
+			<http:body><![CDATA[#[vars.ShippingRequest]]]></http:body>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="d4aa2874-7512-4b3a-b631-a4953e4796aa" />
 	</flow>
 </mule>
