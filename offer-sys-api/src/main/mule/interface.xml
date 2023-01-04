@@ -3,7 +3,7 @@
     <http:listener-config name="northwind-offer-sys-api-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8083" />
     </http:listener-config>
-    <apikit:config name="northwind-offer-sys-api-config" api="resource::4b44ec2d-930a-412e-9413-9e3f70bd73e8:northwind-offer-sys-api:1.1.1:raml:zip:northwind-offer-sys-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="northwind-offer-sys-api-config" api="resource::4b44ec2d-930a-412e-9413-9e3f70bd73e8:northwind-offer-sys-api:1.0.16:raml:zip:northwind-offer-sys-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="northwind-offer-sys-api-main">
         <http:listener config-ref="northwind-offer-sys-api-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -142,9 +142,6 @@ output application/json
         <flow-ref doc:name="Flow Reference" doc:id="fe9374f7-fe27-4b0d-90e8-6c73194f4f41" name="acceptedOffersByCustomerIDFlow" />
     </flow>
     <flow name="get:\offer\pending:northwind-offer-sys-api-config">
-        <flow-ref doc:name="Flow Reference" doc:id="600193f9-d04f-4892-8677-ffe23ea57d36" name="pendingOffersFlow" />
-    </flow>
-    <flow name="post:\offer\matching:application\json:northwind-offer-sys-api-config">
-        <flow-ref doc:name="Flow Reference" doc:id="666228fc-4ce2-4b2c-a517-7440b3110b2d" name="OfferIDvsCustomerID" />
+		<flow-ref doc:name="Flow Reference" doc:id="600193f9-d04f-4892-8677-ffe23ea57d36" name="pendingOffersFlow"/>
     </flow>
 </mule>

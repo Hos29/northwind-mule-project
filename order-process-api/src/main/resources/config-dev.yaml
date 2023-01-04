@@ -8,7 +8,3 @@ orderrequest:
 offerrequest:
   host: "localhost"
   port: "8083"
-  
-shippingrequest:
-  host: "localhost"
-  port: "8084"
