@@ -18,33 +18,29 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 	</flow>
 	<flow name="postCustomerFlow" doc:id="7b2ee7eb-9720-4490-8590-adfbc6e23569" >
 		<logger level="INFO" doc:name="startPostCustomerFlow" doc:id="dea01201-2581-4fb6-854e-49d48af3f9f9" />
-		<ee:transform doc:name="Transform Message" doc:id="d448e838-0ea6-404f-be5a-50e7d57c6bd4">
-			<ee:message>
-				<ee:set-payload resource="PostCustomerFlow.dwl" />
-			</ee:message>
-		</ee:transform>
-		<http:request method="POST" doc:name="Request" doc:id="71c88a2f-b4d8-41eb-b421-e64be222a814" config-ref="HTTP_Request_configuration" path="/api/customers">
-			<http:body ><![CDATA[#[%dw 2.0
+		<ee:transform doc:name="Transform Message" doc:id="7401a49f-9a60-4f77-abc2-39aa23129103" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
 {
-	CustomerID: payload.CustomerID,
-	CompanyName: payload.CompanyName,
-	ContactName: payload.ContactName,
-	ContactTitle: payload.ContactTitle,
-	Address: payload.Address,
-	City: payload.City,
-	PostalCode: payload.PostalCode,
-	Country: payload.Country,
-	Region: payload.Region,
-	Phone: payload.Phone,
-	Fax: payload.Fax
-}]]]></http:body>
+	CustomerID: payload.customerID,
+	CompanyName: payload.companyName,
+	ContactName: payload.contactName,
+	ContactTitle: payload.contactTitle,
+	Address: payload.address,
+	PostalCode: payload.postalCode,
+	Country: payload.country,
+	Phone: payload.phone
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="Request" doc:id="71c88a2f-b4d8-41eb-b421-e64be222a814" config-ref="HTTP_Request_configuration" path="/api/customers">
 		</http:request>
 		<ee:transform doc:name="Transform Message" doc:id="f76add61-c4d6-4a09-872a-dc27505abe44" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
-output application/xml
+output application/json
 ---
 "Message": "Customer added successfully"]]></ee:set-payload>
 			</ee:message>

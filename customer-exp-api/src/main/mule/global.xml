@@ -18,7 +18,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			<ee:transform doc:name="Transform Message" doc:id="74d9c9c5-1f83-4364-ae4b-ef8bb3c2e39a" >
 				<ee:message >
 					<ee:set-payload ><![CDATA[%dw 2.0
-output application/xml		
+output application/json		
 ---
 {
 	message: "Service unavailable"
@@ -33,7 +33,7 @@ output application/xml
 			<ee:transform doc:name="Transform Message" doc:id="23bbb3e2-2c38-47c1-a481-0c1d20cd3ef1" >
 				<ee:message >
 					<ee:set-payload ><![CDATA[%dw 2.0
-output application/xml
+output application/json
 ---
 {
 	message: "Duplicated entry to database"
@@ -46,7 +46,7 @@ output application/xml
 			<ee:transform doc:name="Transform Message" doc:id="e003178c-ab94-4db4-a1de-f0ab62725c65" >
 				<ee:message >
 					<ee:set-payload ><![CDATA[%dw 2.0
-output application/xml
+output application/json
 ---
  {
  	message: error.description

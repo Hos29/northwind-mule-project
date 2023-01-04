@@ -62,24 +62,10 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>c9c5d97e-9fd7-45e4-92bb-2ab0d18441ed</groupId>
-			<artifactId>mini-project-eapi</artifactId>
-			<version>1.0.0</version>
-			<classifier>raml</classifier>
-			<type>zip</type>
-		</dependency>
-		<dependency>
 			<groupId>org.mule.modules</groupId>
 			<artifactId>mule-validation-module</artifactId>
 			<version>2.0.2</version>
 			<classifier>mule-plugin</classifier>
-		</dependency>
-		<dependency>
-			<groupId>c48900eb-efe7-4ec6-8a2a-143dee19e8c6</groupId>
-			<artifactId>northwind-customer-exp-api</artifactId>
-			<version>1.0.3</version>
-			<classifier>raml</classifier>
-			<type>zip</type>
 		</dependency>
 		<dependency>
 			<groupId>com.mulesoft.munit</groupId>

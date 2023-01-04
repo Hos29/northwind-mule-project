@@ -1,0 +1,31 @@
+#%RAML 1.0
+title: Northwind-Customer-Exp-API
+
+
+types:
+  Customer: !include Datatypes/Customer.raml
+
+/customers:
+  get:
+    description: "Retrieves customer data"
+    responses:
+      200:
+        body:
+          application/json:
+            type: Customer[]
+            examples:
+              output: !include Examples/CustomersExample.raml
+        
+  post:
+    description: "Registers a new customer in the Northwind Database"
+    body:
+      application/json:
+        type: Customer
+        examples:
+          input: !include Examples/CustomerExample.raml
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              message: Customer added successfully

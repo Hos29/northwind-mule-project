@@ -4,7 +4,7 @@
       "payload": "sample_data/list_json.json"
     },
     "d448e838-0ea6-404f-be5a-50e7d57c6bd4": {
-      "payload": "sample_data/customer.xml"
+      "payload": "sample_data/json_1.json"
     },
     "4cda681e-39ad-4995-bfdc-5648dee0af1e": {
       "attributes": "sample_data/httprequestattributes.dwl"
@@ -14,6 +14,9 @@
     },
     "a819cbf7-74d0-4ef6-800f-4c832fe3cde8": {
       "payload": "sample_data/java_1.dwl"
+    },
+    "7401a49f-9a60-4f77-abc2-39aa23129103": {
+      "payload": "sample_data/json_2.json"
     }
   }
 }

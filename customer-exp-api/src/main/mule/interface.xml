@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
-    <apikit:config name="northwind-customer-exp-api-config" api="resource::c48900eb-efe7-4ec6-8a2a-143dee19e8c6:northwind-customer-exp-api:1.0.3:raml:zip:northwind-customer-exp-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="northwind-customer-exp-api-config" api="northwind-customer-exp-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="northwind-customer-exp-api-main">
         <http:listener config-ref="HTTP_Listener_config" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body><![CDATA[#[payload]]]></http:body>
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
         <apikit:router config-ref="northwind-customer-exp-api-config" />
@@ -96,11 +96,11 @@ output application/json
     <flow name="northwind-customer-exp-api-console">
         <http:listener config-ref="HTTP_Listener_config" path="/console/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body><![CDATA[#[payload]]]></http:body>
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
         <apikit:console config-ref="northwind-customer-exp-api-config" />
@@ -121,9 +121,9 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\customers:northwind-customer-exp-api-config">
-		<flow-ref doc:name="getFlow" doc:id="a1546863-c24b-4adc-8024-d050c3eb29fe" name="getCustomersFlow"/>
+		<flow-ref doc:name="Flow Reference" doc:id="7096fac9-c8d1-4fd8-906a-cb6660986e8d" name="getCustomersFlow"/>
     </flow>
-    <flow name="post:\customers:application\xml:northwind-customer-exp-api-config">
-		<flow-ref doc:name="postFlow" doc:id="0fc1f539-05d7-4d20-96c8-724ff6e733bf" name="postCustomerFlow"/>
+    <flow name="post:\customers:application\json:northwind-customer-exp-api-config">
+		<flow-ref doc:name="Flow Reference" doc:id="3ac4c877-9af2-4715-aacb-44d7f2925821" name="postCustomerFlow"/>
     </flow>
 </mule>
