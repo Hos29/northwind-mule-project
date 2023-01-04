@@ -37,11 +37,11 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 	<flow name="postCustomerFlow" doc:id="16272340-2b77-4ef8-a44e-d6c8e9d12513" >
 		<logger level="INFO" doc:name="startPostFlow" doc:id="c6689c43-a976-4960-af75-da06765f4b42" />
 		<db:insert doc:name="Insert" doc:id="4267bc8b-118b-417a-a1e8-def671c37a76" config-ref="Database_Config">
-			<db:sql ><![CDATA[INSERT INTO customers 
-VALUES ( :CustomerID, :CompanyName, :ContactName, :ContactTitle, :Address, :City, :PostalCode, :Country, :Region, :Phone, :Fax)]]></db:sql>
+			<db:sql ><![CDATA[INSERT INTO customers (CustomerID, CompanyName, ContactName, ContactTitle, Address, PostalCode, Country, Phone)
+VALUES ( :CustomerID, :CompanyName, :ContactName, :ContactTitle, :Address, :PostalCode, :Country, :Phone)]]></db:sql>
 			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
 		</db:insert>
-		<set-payload value='Customer added successfully' doc:name="Set Payload" doc:id="a8b5953b-7cb2-4aab-bd8a-a73b71baec5b" />
+<!-- [STUDIO:"Set Payload"]		<set-payload value='Customer added successfully' doc:name="Set Payload" doc:id="a8b5953b-7cb2-4aab-bd8a-a73b71baec5b" /> [STUDIO] -->
 		<logger level="INFO" doc:name="endPostFlow" doc:id="01e6e166-dcbd-4828-9b32-3374c11791c4" />
 	</flow>
 </mule>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
     <apikit:config name="northwind-customer-sys-api-config" api="northwind-customer-sys-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="northwind-customer-sys-api-main">
         <http:listener config-ref="HTTP_Listener_config" path="/api/*">
@@ -121,52 +121,9 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\customers:northwind-customer-sys-api-config">
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-[
-  {
-    CustomerID: "ALFKI",
-    CompanyName: "Alfreds Futterkiste",
-    ContactName: "Maria Anders",
-    ContactTitle: "Sales rep",
-    Address: "Obere Str 57",
-    City: "Berlin",
-    Region: "BA",
-    PostalCode: 11889,
-    Country: "Germany",
-    Phone: "192-2844123",
-    Fax: "222.222.222"
-  }, 
-  {
-    CustomerID: "ANATR",
-    CompanyName: "Ana Trujillo Emparedados y helados",
-    ContactName: "Ana Trujillo",
-    ContactTitle: "Manager",
-    Address: "Avida Constantin",
-    City: "Mexico city",
-    Region: "MA",
-    PostalCode: 23384,
-    Country: "Mexico",
-    Phone: "294-1139401",
-    Fax: "333.333.333"
-  }
-]]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="373a3988-6769-45b6-a6f7-49b319694853" name="getCustomersFlow"/>
     </flow>
     <flow name="post:\customers:application\json:northwind-customer-sys-api-config">
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "Customer added successfully!"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="caaa2bb5-701d-4103-81a8-296c2e77c825" name="postCustomerFlow"/>
     </flow>
 </mule>

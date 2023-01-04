@@ -4,7 +4,7 @@ http:
 db: 
   host: "localhost"
   port: "3306"
-  user: "root"
-  password: "$V,]ms^3hjqCxzq;"
+  user: "musti"
+  password: "mustimusti"
   database: "northwind"
   
