@@ -4,6 +4,9 @@ title: Northwind-Customer-Exp-API
 
 types:
   Customer: !include Datatypes/Customer.raml
+  OfferRequest: !include Datatypes/OfferRequest.raml
+  OfferDecision: !include Datatypes/OfferDecision.raml
+
 
 /customers:
   get:
@@ -29,3 +32,39 @@ types:
           application/json:
             example:
               message: Customer added successfully
+  /offerreq:
+    post:
+      body:
+        application/json:
+          type: OfferRequest
+          examples:
+            value: !include Examples/OfferRequestExample.raml
+      responses:
+        201:
+          body:
+            application/json:
+              example:
+                message: Offer requested, your OfferID is 12
+  /offerdec:
+    put:
+      body:
+        application/json:
+          type: OfferDecision
+          examples:
+            value: !include Examples/OfferDecisionExample.raml
+      responses:
+        201:
+          body:
+            application/json:
+              example:
+                message: You have accepted the offer!
+  /offers:
+    get:
+      queryParameters:
+        CustomerID:
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include Examples/OffersAcceptedExample.raml

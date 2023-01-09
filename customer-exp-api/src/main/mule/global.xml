@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	<configuration-properties doc:name="Configuration properties" doc:id="142f6d51-2216-4a0b-b117-25f900759f7a" file="config.yaml" />
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="142f6d51-2216-4a0b-b117-25f900759f7a" file="config-${env}.yaml" />
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e388eb32-e9ac-4e9f-b1a3-5f659a4eb9f1" >
 		<http:listener-connection host="0.0.0.0" port="${http.port}" />
 	</http:listener-config>
@@ -13,6 +15,18 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<http:request-connection port="${request.port}" host="${request.host}" connectionIdleTimeout="300000"/>
 	</http:request-config>
 	<configuration doc:name="Configuration" doc:id="b10e734d-7ede-4232-8489-fd5db3d3accf" defaultErrorHandler-ref="globalError_Handler" />
+	<http:request-config name="HTTP_Request_Accepted_Offers" doc:name="HTTP Request configuration" doc:id="b3cee609-aee3-4efc-bc03-9c9addb5d3c2" >
+		<http:request-connection host="${treq.host}" port="${treq.port}"/>
+	</http:request-config>
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="cf7adf3c-3afc-40ab-a61c-98862d7369a6" />
+	<http:request-config name="HTTP_Request_Request_Offer" doc:name="HTTP Request configuration" doc:id="f589e262-55e9-4c8c-8f80-941e2da8d0c5" >
+		<http:request-connection host="${treq.host}" port="${treq.port}" />
+	</http:request-config>
+	<global-property doc:name="Global Property" doc:id="aa6a4df8-38ba-4409-b11b-ed396450a5cb" name="env" value="dev" />
+	<global-property doc:name="Global Property" doc:id="06ad0bb3-a68f-461c-b2b6-47dbfc53df8b" name="prod" value="prod" />
+	<http:request-config name="HTTP_Request_OfferID_vs_CustomerID" doc:name="HTTP Request configuration" doc:id="621af3ee-37a5-42c7-ae4d-138b1aee26b2" >
+		<http:request-connection host="${orderreq.host}" port="${orderreq.port}" />
+	</http:request-config>
 	<error-handler name="globalError_Handler" doc:id="f9083fc1-be2a-4072-8003-04215bafad81" >
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c93c4ee6-cda3-4a8e-a97f-8100cf87d1fe" type="HTTP:CONNECTIVITY">
 			<ee:transform doc:name="Transform Message" doc:id="74d9c9c5-1f83-4364-ae4b-ef8bb3c2e39a" >

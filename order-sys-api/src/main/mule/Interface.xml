@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
-    <apikit:config name="northwind-order-sys-api-config" api="resource::4b44ec2d-930a-412e-9413-9e3f70bd73e8:northwind-order-sys-api:1.2.4:raml:zip:northwind-order-sys-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="northwind-order-sys-api-config" api="resource::4b44ec2d-930a-412e-9413-9e3f70bd73e8:northwind-order-sys-api:1.2.6:raml:zip:northwind-order-sys-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="northwind-order-sys-api-main">
         <http:listener config-ref="HTTP_Listener_config" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -137,5 +137,140 @@ output application/json
     </flow>
     <flow name="post:\unitinstock:application\json:northwind-order-sys-api-config">
         <flow-ref doc:name="Flow Reference" doc:id="87acb4fb-aad9-484f-a385-80ff9613d51e" name="UnitsInStockFlow" />
+    </flow>
+    <flow name="get:\customerorders:northwind-order-sys-api-config">
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  Value: [
+    {
+      OrderID: 10743,
+      CustomerID: "ALkKI",
+      EmployeeID: 6,
+      OrderDate: "1997-05-25",
+      RequiredDate: "1997-04-22",
+      ShippedDate: "1997-07-02",
+      ShipVia: 3,
+      Freight: 29.66,
+      ShipName: "Antonio Moreno Taquera",
+      ShipAddress: "Mataderos 2312",
+      ShipCity: "Mexico",
+      ShipRegion: null,
+      ShipPostalCode: 12209,
+      ShipCountry: "Mexico"
+    }, 
+    {
+      OrderID: 10643,
+      CustomerID: "ALFKI",
+      EmployeeID: 6,
+      OrderDate: "1997-08-25",
+      RequiredDate: "1997-09-22",
+      ShippedDate: "1997-09-02",
+      ShipVia: 1,
+      Freight: 29.46,
+      ShipName: "Alfreds Futterkiste",
+      ShipAddress: "Obere Str. 57",
+      ShipCity: "Berlin",
+      ShipRegion: null,
+      ShipPostalCode: 12209,
+      ShipCountry: "Germany"
+    }
+  ]
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\employeerders:northwind-order-sys-api-config">
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  Value: [
+    {
+      OrderID: 10743,
+      CustomerID: "ALkKI",
+      EmployeeID: 6,
+      OrderDate: "1997-05-25",
+      RequiredDate: "1997-04-22",
+      ShippedDate: "1997-07-02",
+      ShipVia: 3,
+      Freight: 29.66,
+      ShipName: "Antonio Moreno Taquera",
+      ShipAddress: "Mataderos 2312",
+      ShipCity: "Mexico",
+      ShipRegion: null,
+      ShipPostalCode: 12209,
+      ShipCountry: "Mexico"
+    }, 
+    {
+      OrderID: 10643,
+      CustomerID: "ALFKI",
+      EmployeeID: 6,
+      OrderDate: "1997-08-25",
+      RequiredDate: "1997-09-22",
+      ShippedDate: "1997-09-02",
+      ShipVia: 1,
+      Freight: 29.46,
+      ShipName: "Alfreds Futterkiste",
+      ShipAddress: "Obere Str. 57",
+      ShipCity: "Berlin",
+      ShipRegion: null,
+      ShipPostalCode: 12209,
+      ShipCountry: "Germany"
+    }
+  ]
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\customerorders\(OrderID):northwind-order-sys-api-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="OrderID">attributes.uriParams.'OrderID'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  OrderID: 10643,
+  CustomerID: "ALFKI",
+  EmployeeID: 6,
+  OrderDate: "1997-08-25 00:00:00",
+  RequiredDate: "1997-09-22 00:00:00",
+  ShippedDate: "1997-09-02 00:00:00",
+  ShipVia: 1,
+  Freight: 29.46,
+  ShipName: "Alfreds Futterkiste",
+  ShipAddress: "Obere Str. 57",
+  ShipCity: "Berlin",
+  ShipRegion: null,
+  ShipPostalCode: 12209,
+  ShipCountry: "Germany"
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\customerorders:application\json:northwind-order-sys-api-config">
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "OrderPlaced"
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\products:application\json:northwind-order-sys-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="bf1780ea-651b-4514-aabd-bd4ecbb1479c" name="GetProductAvailability"/>
     </flow>
 </mule>

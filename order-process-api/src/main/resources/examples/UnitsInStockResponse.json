@@ -1,0 +1,12 @@
+{
+  "ProductID": 1,
+  "ProductName": "Chai",
+  "SupplierID": 1,
+  "CategoryID": 1,
+  "QuantityPerUnit": "asdasda",
+  "UnitPrice": 18,
+  "UnitsInStock": 20,
+  "UnitsOnOrder": 0,
+  "ReorderLevel": 10,
+  "Discounted": 9 
+}

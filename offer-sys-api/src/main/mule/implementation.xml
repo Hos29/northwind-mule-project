@@ -36,6 +36,7 @@ VALUES (:CustomerID, :ProductID, :Quantity)]]></db:sql>
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
+
 payload.OfferID]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
@@ -219,8 +220,8 @@ output application/json
 payload map ( payload01 , indexOfPayload01 ) -> {
 	OfferID: payload01.OfferID,
 	Status: payload01.Status,
-	DateCreated: payload01.DateCreated as Date,
-	DateApproved: payload01.DateApproved as Date,
+	DateCreated: payload01.DateCreated,
+	DateApproved: payload01.DateApproved,
 	EmployeeID: payload01.EmployeeID,
 	CustomerID: payload01.CustomerID,
 	ProductID: payload01.ProductID,
@@ -272,5 +273,21 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="0401964e-1dac-4d20-b46f-fddfd7493e69" />
+	</flow>
+	<flow name="DateApprovedFlow" doc:id="36069512-c8fb-40b7-9168-21f84e69e040" >
+		<db:select doc:name="Select" doc:id="57852e24-05ce-44ac-8c6c-fa02ac46aadf" config-ref="Database_Config">
+			<db:sql ><![CDATA[select DateApproved from offers
+Where OfferID = :OfferID]]></db:sql>
+			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="48967831-c03e-4417-86eb-0d4210c53c46" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="b98b8fb7-80e4-4b52-9755-843b22444120" />
 	</flow>
 </mule>

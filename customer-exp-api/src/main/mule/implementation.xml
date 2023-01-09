@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<flow name="getCustomersFlow" doc:id="a7856407-7b5b-4825-be5b-a20d6c69c152" >
 		<logger level="INFO" doc:name="startGetCustomerFlow" doc:id="7d6fdece-cbaa-4307-9020-4fba8b65ebce" />
 		<http:request method="GET" doc:name="Request" doc:id="baa1cc98-018a-43e6-800c-7c041641b862" config-ref="HTTP_Request_configuration" path="/api/customers"/>
@@ -35,7 +36,7 @@ output application/json
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<http:request method="POST" doc:name="Request" doc:id="71c88a2f-b4d8-41eb-b421-e64be222a814" config-ref="HTTP_Request_configuration" path="/api/customers">
+		<http:request method="POST" doc:name="Request" doc:id="71c88a2f-b4d8-41eb-b421-e64be222a814" config-ref="HTTP_Request_configuration" path="/api/customers" responseTimeout="600000">
 		</http:request>
 		<ee:transform doc:name="Transform Message" doc:id="f76add61-c4d6-4a09-872a-dc27505abe44" >
 			<ee:message >
@@ -46,5 +47,32 @@ output application/json
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="endpostCustomerFlow" doc:id="e5809168-ac22-4895-9d9f-4e9acf051455" />
+	</flow>
+	<flow name="getAcceptedOffersFlow" doc:id="c16376b4-9695-4c92-972d-efbc4b31adea" >
+		<logger level="INFO" doc:name="Logger" doc:id="c4baa434-bd1f-4584-95bb-357e40acf71c" />
+		<http:request method="GET" doc:name="Request" doc:id="0ff4bd56-aca8-4f9b-99a6-9bf0914383e4" config-ref="HTTP_Request_Accepted_Offers" responseTimeout="600000" url="http://localhost:8081/api/allaccepted">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	CustomerID : attributes.queryParams.CustomerID
+}]]]></http:query-params>
+		</http:request>
+	</flow>
+	<flow name="postOfferDecisionFlow" doc:id="f085dfea-8f1f-406d-9ca7-9f5a999680a5" >
+		<logger level="INFO" doc:name="Logger" doc:id="1d76df6f-65d9-4ab7-92e3-89bac64dddcc" />
+		<choice doc:name="AccOrRej" doc:id="205a813c-0e4d-4248-a85f-077c66296286" >
+			<when expression="payload.PaymentTransactionID != null">
+				<set-variable doc:name="Validation" doc:id="04af7d2c-e1b4-40dd-9cd2-659a13d5efbd" variableName="Regexmatcher" value="true"/>
+				<validation:matches-regex doc:name="Matches regex" doc:id="b1329ed7-62ac-4b8a-a717-0aa2b3432221" config-ref="Validation_Config" value="#[payload.PaymentTransactionID]" regex="^[A-Za-z]{3}(\d){7}$" message="Your PaymentTransactionID is invalid!"/>
+				<http:request method="PUT" doc:name="Request" doc:id="42e911b8-ef06-4ed4-9f71-d131d43b3a55" config-ref="HTTP_Request_OfferID_vs_CustomerID" url="http://localhost:8081/api/offers/accept" responseTimeout="600000"/>
+			</when>
+			<otherwise >
+				<http:request method="PUT" doc:name="Request" doc:id="b278456b-cc17-4f98-a069-e9976f18a398" config-ref="HTTP_Request_OfferID_vs_CustomerID" url="http://localhost:8081/api/offers/reject" responseTimeout="600000"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="postOfferRequestFlow" doc:id="607ac2ce-ac11-4065-b7f4-7bf3b9e67561" >
+		<logger level="INFO" doc:name="Logger" doc:id="8ec3d39e-d857-49ae-8899-573c868f602b" />
+		<http:request method="POST" doc:name="Request" doc:id="82113680-48cf-40c8-ae57-224a5c1967ff" config-ref="HTTP_Request_Request_Offer" url="http://localhost:8081/api/products" responseTimeout="600000"/>
 	</flow>
 </mule>

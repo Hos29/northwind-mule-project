@@ -1,0 +1,10 @@
+{
+  "Quantity": 33,
+  "ProductID": 1,
+  "ProductName": "Chai",
+  "SupplierID": 1,
+  "CategoryID": 1,
+  "QuantityPerUnit": "asdasda",
+  "UnitPrice": 1,
+  "UnitsInStock": 332
+}

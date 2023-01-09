@@ -9,11 +9,13 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c878e207-1b39-4920-8cd7-f0f8344e450a" >
 		<http:listener-connection host="0.0.0.0" port="${http.port}" readTimeout="300000"/>
 	</http:listener-config>
-	<configuration-properties doc:name="Configuration properties" doc:id="24434bba-0c0f-441a-b641-206f47cc3d19" file="config.yaml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="24434bba-0c0f-441a-b641-206f47cc3d19" file="config-${env}.yaml" />
 	<configuration doc:name="Configuration" doc:id="3ae6667c-fc4a-4c4b-822f-f9387eef1a97" defaultErrorHandler-ref="globalError_Handler" />
 	<db:config name="Database_Config" doc:name="Database Config" doc:id="533e4c3d-b9ea-4fea-b103-afdff28b1bd1">
 		<db:my-sql-connection host="${db.host}" port="${db.port}" password="${db.password}" database="${db.database}" user="${db.user}" />
 	</db:config>
+	<global-property doc:name="Global Property" doc:id="35940647-3a6f-4e9a-89eb-cba67819cfc4" name="env" value="dev" />
+	<global-property doc:name="Global Property" doc:id="8c8042f7-38b3-4296-95cb-118f19e37462" name="prod" value="prod" />
 	<error-handler name="globalError_Handler" doc:id="fa4065a9-078e-497d-82e5-93aefbf37a7f" >
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="359f9ca1-c3b6-44dd-97ba-084cc3ebd0a0" type="DB:CONNECTIVITY">
 			<ee:transform doc:name="Transform Message" doc:id="0c48c249-eb57-4a75-a836-760caef642f0" >

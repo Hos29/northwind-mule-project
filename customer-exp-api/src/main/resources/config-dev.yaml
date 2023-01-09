@@ -1,0 +1,18 @@
+http:
+  port: "8086"
+  
+request: 
+  host: "localhost"
+  port: "8085"
+  
+treq:
+  host: "localhost"
+  port: "8081"
+  
+orderreq:
+  host: "localhost"
+  port: "8081"
+
+  
+
+  

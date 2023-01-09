@@ -2,6 +2,14 @@
   "sampleData": {
     "57676dc3-121a-4b4c-a8c6-eab777a91ae7": {
       "payload": "sample_data/list_json.json"
-    }
+    },
+    "b09dfaa3-c04c-46f9-9972-700570364941": {
+      "payload": "sample_data/java.dwl"
+    },
+    "33bd696c-d4b5-4f99-a78c-6215c73399d1": {
+      "vars-DateApproved": "sample_data/java_1.dwl",
+      "vars-ShippingDate": "sample_data/java_2.dwl"
+    },
+    "023a7d1a-56f5-4a0e-8c06-782facb5afc7": {}
   }
 }

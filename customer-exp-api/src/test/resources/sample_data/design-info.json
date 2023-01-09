@@ -17,6 +17,9 @@
     },
     "7401a49f-9a60-4f77-abc2-39aa23129103": {
       "payload": "sample_data/json_2.json"
+    },
+    "f180d1cd-9c57-4002-bd89-6ec689e88d27": {
+      "payload": "sample_data/json_3.json"
     }
   }
 }

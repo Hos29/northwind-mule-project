@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
     <apikit:config name="northwind-customer-exp-api-config" api="northwind-customer-exp-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="northwind-customer-exp-api-main">
         <http:listener config-ref="HTTP_Listener_config" path="/api/*">
@@ -121,9 +121,18 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\customers:northwind-customer-exp-api-config">
-		<flow-ref doc:name="Flow Reference" doc:id="7096fac9-c8d1-4fd8-906a-cb6660986e8d" name="getCustomersFlow"/>
+        <flow-ref doc:name="Flow Reference" doc:id="7096fac9-c8d1-4fd8-906a-cb6660986e8d" name="getCustomersFlow" />
     </flow>
     <flow name="post:\customers:application\json:northwind-customer-exp-api-config">
-		<flow-ref doc:name="Flow Reference" doc:id="3ac4c877-9af2-4715-aacb-44d7f2925821" name="postCustomerFlow"/>
+        <flow-ref doc:name="Flow Reference" doc:id="3ac4c877-9af2-4715-aacb-44d7f2925821" name="postCustomerFlow" />
+    </flow>
+    <flow name="get:\customers\offers:northwind-customer-exp-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="b30baaf7-9456-4c6c-9ca8-8b6e8257d2ed" name="getAcceptedOffersFlow" />
+    </flow>
+    <flow name="post:\customers\offerreq:application\json:northwind-customer-exp-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="34d8bd12-aa6f-4e3a-9208-78fee91d479b" name="postOfferRequestFlow" />
+    </flow>
+    <flow name="put:\customers\offerdec:application\json:northwind-customer-exp-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="3975f764-935b-4392-928c-ccec34e41ddf" name="postOfferDecisionFlow" />
     </flow>
 </mule>
