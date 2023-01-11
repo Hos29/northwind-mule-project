@@ -134,4 +134,13 @@ type shippingRequest = {|
       </types:input-event>
     </types:processor-declaration>
   </types:enrichment>
+  <types:enrichment select="#0c53e912-8337-4385-a86d-a956d1363062">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="shippingRequest"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
 </types:mule>

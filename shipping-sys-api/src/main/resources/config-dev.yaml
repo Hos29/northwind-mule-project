@@ -5,3 +5,11 @@ http-listener:
 http-request:
   host: "localhost"
   port: "8085"
+  
+
+db:
+  host: "localhost"
+  port: "3306"
+  user: "root"
+  password: "$V,]ms^3hjqCxzq"
+  database: "northwind"

@@ -1,15 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="9a0a2abc-170c-4d2b-9fbb-abc9350292eb" >
 		<http:listener-connection host="${http-listener.host}" port="${http-listener.port}" />
 	</http:listener-config>
-	<configuration-properties doc:name="Configuration properties" doc:id="b7372c29-30a6-4b56-8c3c-9db6eaa93af6" file="config-dev.yaml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="b7372c29-30a6-4b56-8c3c-9db6eaa93af6" file="config-${env}.yaml" />
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="7463b3f6-78af-4c7c-b3ff-d2b456528e30" >
-		<http:request-connection host="${http-request.host}" port="${http-request.port}" />
+		<http:request-connection host="${http-request.host}" port="${http-request.port}" connectionIdleTimeout="300000"/>
 	</http:request-config>
 	<global-property doc:name="Global Property" doc:id="919e59f5-2f14-4f0d-9a96-b9cc79150786" name="env" value="prod" />
+	<configuration doc:name="Configuration" doc:id="79c24170-cbf3-40ac-a589-5ba6cff6a59a" defaultErrorHandler-ref="shipping-sys-errorhandler" />
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="77ffbab0-b191-465b-bc64-dcde9d3ab572" >
+		<db:my-sql-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" database="${db.database}" />
+	</db:config>
+	<error-handler name="shipping-sys-errorhandler" doc:id="9855f2a4-6b89-4018-93fb-a067acc4348c" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="957cea17-bc10-4c6a-9042-52acb614095b" type="CONNECTIVITY" >
+			<ee:transform doc:name="Transform Message" doc:id="e103bbe0-502a-4e56-8fed-067e1b5f4cbb" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Shipping API is unavailable"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="df4ca18d-30ee-454e-ae47-4413a7dec62c" type="HTTP:BAD_REQUEST">
+			<set-variable value="400" doc:name="Set Variable" doc:id="4accc2c4-1bb9-44e8-9615-17f03b2a517e" variableName="httpStatus" />
+			<ee:transform doc:name="Transform Message" doc:id="814cfbcf-2021-4b2f-872f-867f48a7c399" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3e37d1a7-ffdc-41cb-af0d-76d8fe5e0abf" type="DB:CONNECTIVITY">
+			<ee:transform doc:name="Transform Message" doc:id="b97cb70f-df90-4ad5-b4d2-c3fefa70c2f8" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "Database unavailable"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="0f01039a-a468-4e6c-a6c3-0d59b5f68600" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="63318c0a-6b0e-423e-8044-e774532d7b9d">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
 </mule>

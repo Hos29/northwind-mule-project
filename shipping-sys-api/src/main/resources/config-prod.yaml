@@ -1,6 +1,14 @@
 http-listener:
   port: "8084"
+  host: "localhost"
   
 http-request:
   host: "20.224.50.155"
   port: "8085"
+  
+db:
+  host: "20.224.50.155"
+  port: "3306"
+  user: "group02"
+  password: "@Br1ghtsGr0up02!"
+  database: "northwind02"
